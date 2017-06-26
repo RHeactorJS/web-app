@@ -1,4 +1,4 @@
-import {HttpProblem} from 'models'
+import {HttpProblem} from '@rheactorjs/models'
 import {HttpProgress} from '../util/http'
 import _cloneDeep from 'lodash/cloneDeep'
 import Promise from 'bluebird'

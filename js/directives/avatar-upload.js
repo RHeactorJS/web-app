@@ -1,9 +1,9 @@
 import {httpProblemfromHttpError, httpProblemfromException} from '../util/http-problem'
 import {HttpProgress, accept, auth} from '../util/http'
 import Promise from 'bluebird'
-import {URIValue} from 'value-objects'
+import {URIValue} from '@rheactorjs/value-objects'
 import {RHeactorJSImageServiceService} from '../services/image-service'
-import {HttpProblem} from 'models'
+import {HttpProblem} from '@rheactorjs/models'
 
 export const AvatarUploadDirective = (Upload, $timeout, imageService, ClientStorageService, TokenService) => ({
   restrict: 'E',

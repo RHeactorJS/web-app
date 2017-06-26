@@ -1,9 +1,9 @@
 import {PasswordChangeConfirmModel} from '../model/password-change-confirm'
 import {GenericController} from './generic'
-import {JsonWebToken, HttpProblem} from 'models'
+import {JsonWebToken, HttpProblem} from '@rheactorjs/models'
 import {HttpProgress} from '../util/http'
 import {JSONLD} from '../util/jsonld'
-import {EmailValue} from 'value-objects'
+import {EmailValue} from '@rheactorjs/value-objects'
 import {httpProblemfromException} from '../util/http-problem'
 
 export function PasswordChangeController (app) {

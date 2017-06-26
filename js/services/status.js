@@ -1,7 +1,7 @@
 import {GenericAPIService} from './generic'
-import {Status} from 'models'
+import {Status} from '@rheactorjs/models'
 import {JSONLD} from '../util/jsonld'
-import {URIValue} from 'value-objects'
+import {URIValue} from '@rheactorjs/value-objects'
 
 /**
  * @param $http

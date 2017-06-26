@@ -2,7 +2,7 @@ import {HttpProgress} from '../util/http'
 import {appLogger} from '../util/logger'
 import {JSONLD} from '../util/jsonld'
 import _defaults from 'lodash/defaults'
-import {HttpProblem} from 'models'
+import {HttpProblem} from '@rheactorjs/models'
 import {httpProblemfromException} from '../util/http-problem'
 
 const logger = appLogger()

@@ -1,4 +1,4 @@
-import {URIValue} from 'value-objects'
+import {URIValue} from '@rheactorjs/value-objects'
 
 export class AccountAvatarController {
   constructor (ClientStorageService, UserService) {

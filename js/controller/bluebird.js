@@ -1,5 +1,5 @@
 import {appLogger} from '../util/logger'
-import {HttpProblem} from 'models'
+import {HttpProblem} from '@rheactorjs/models'
 import {EntryNotFoundError} from '@rheactorjs/errors'
 
 /* globals trackJs */

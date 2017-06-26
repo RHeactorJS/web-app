@@ -1,4 +1,4 @@
-import {JsonWebToken, HttpProblem} from 'models'
+import {JsonWebToken, HttpProblem} from '@rheactorjs/models'
 import {HttpProgress} from '../util/http'
 import {JSONLD} from '../util/jsonld'
 import {httpProblemfromException} from '../util/http-problem'

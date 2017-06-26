@@ -3,8 +3,8 @@ import {auth, accept, ifMatch} from '../util/http'
 import Promise from 'bluebird'
 import {ApplicationError} from '@rheactorjs/errors'
 import {JSONLD} from '../util/jsonld'
-import {URIValue, URIValueType, MaybeURIValueType} from 'value-objects'
-import {ModelType, ListType, VersionNumberType, JsonWebTokenType, MaybeJsonWebTokenType} from 'models'
+import {URIValue, URIValueType, MaybeURIValueType} from '@rheactorjs/value-objects'
+import {ModelType, ListType, VersionNumberType, JsonWebTokenType, MaybeJsonWebTokenType} from '@rheactorjs/models'
 import {String as StringType, Function as FunctionType, struct} from 'tcomb'
 
 export const APIServiceType = struct({

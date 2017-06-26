@@ -1,5 +1,5 @@
 import {GenericAPIService} from '../services/generic'
-import {User} from 'models'
+import {User} from '@rheactorjs/models'
 import {JSONLD} from '../util/jsonld'
 
 export class UserService extends GenericAPIService {

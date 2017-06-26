@@ -1,6 +1,6 @@
 import {GenericAPIService} from '../services/generic'
 import {JSONLD} from '../util/jsonld'
-import {JsonWebToken, JsonWebTokenType} from 'models'
+import {JsonWebToken, JsonWebTokenType} from '@rheactorjs/models'
 import {maybe, String as StringType} from 'tcomb'
 const MaybeStringType = maybe(StringType)
 

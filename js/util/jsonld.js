@@ -1,8 +1,8 @@
 import {appLogger} from './logger'
 import {ApplicationError} from '@rheactorjs/errors'
-import {URIValueType} from 'value-objects'
+import {URIValueType} from '@rheactorjs/value-objects'
 import {String as StringType, Function as FunctionType} from 'tcomb'
-import {ModelType} from 'models'
+import {ModelType} from '@rheactorjs/models'
 
 const logger = appLogger()
 

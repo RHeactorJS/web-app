@@ -1,6 +1,6 @@
 import {GenericAPIService} from '../services/generic'
-import {URIValueType, URIValue} from 'value-objects'
-import {Index} from 'models'
+import {URIValueType, URIValue} from '@rheactorjs/value-objects'
+import {Index} from '@rheactorjs/models'
 import {accept} from '../util/http'
 
 const $context = new URIValue('https://github.com/RHeactorJS/image-service#Upload')
