@@ -1,6 +1,6 @@
 import {RegistrationModel} from '../model/registration'
 import {GenericController} from './generic'
-import {EmailValue} from 'rheactor-value-objects'
+import {EmailValue} from 'value-objects'
 
 export function RegisterController (app) {
   app

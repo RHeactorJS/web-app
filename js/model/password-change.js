@@ -1,4 +1,4 @@
-import {URIValue, EmailValueType} from 'rheactor-value-objects'
+import {URIValue, EmailValueType} from 'value-objects'
 
 const $context = new URIValue('https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange')
 

@@ -1,4 +1,4 @@
-import {EmailValue} from 'rheactor-value-objects'
+import {EmailValue} from 'value-objects'
 
 export const IsEmailDirective = {
   restrict: 'A',

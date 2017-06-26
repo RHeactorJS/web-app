@@ -1,9 +1,9 @@
 import {httpProblemfromHttpError, httpProblemfromException} from '../util/http-problem'
 import {HttpProgress, accept, auth} from '../util/http'
 import Promise from 'bluebird'
-import {URIValue} from 'rheactor-value-objects'
-import {RHeactorImageServiceService} from '../services/rheactor-image-service'
-import {HttpProblem} from 'rheactor-models'
+import {URIValue} from 'value-objects'
+import {RHeactorImageServiceService} from '../services/image-service'
+import {HttpProblem} from 'models'
 
 export const AvatarUploadDirective = (Upload, $timeout, imageService, ClientStorageService, TokenService) => ({
   restrict: 'E',
@@ -23,7 +23,7 @@ export const AvatarUploadDirective = (Upload, $timeout, imageService, ClientStor
       scope.p.activity()
       return Promise
         .join(
-          ClientStorageService.getValidToken().then(token => TokenService.createUserToken(token, 'rheactor-image-service')),
+          ClientStorageService.getValidToken().then(token => TokenService.createUserToken(token, 'image-service')),
           imageService.getUploadURI(),
           Upload.base64DataUrl(file)
         )

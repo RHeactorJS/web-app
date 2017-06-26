@@ -1,10 +1,10 @@
 import {GenericAPIService} from '../services/generic'
-import {URIValueType, URIValue} from 'rheactor-value-objects'
-import {Index} from 'rheactor-models'
+import {URIValueType, URIValue} from 'value-objects'
+import {Index} from 'models'
 import {accept} from '../util/http'
 
-const $context = new URIValue('https://github.com/ResourcefulHumans/rheactor-image-service#Upload')
-const mimeType = 'application/vnd.resourceful-humans.rheactor-image-service.v1+json'
+const $context = new URIValue('https://github.com/RHeactorJS/image-service#Upload')
+const mimeType = 'application/vnd.resourceful-humans.image-service.v1+json'
 
 /**
  * @param $http

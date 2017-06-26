@@ -1,4 +1,4 @@
-import {HttpProblem} from 'rheactor-models'
+import {HttpProblem} from 'models'
 import {HttpProgress} from '../util/http'
 import {httpProblemfromException} from '../util/http-problem'
 import _cloneDeep from 'lodash/cloneDeep'

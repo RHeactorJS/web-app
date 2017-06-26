@@ -2,7 +2,7 @@
 
 import Promise from 'bluebird'
 import {appLogger} from '../util/logger'
-import {TokenExpiredError, EntryNotFoundError, ReanimationFailedError} from '@resourcefulhumans/rheactor-errors'
+import {TokenExpiredError, EntryNotFoundError, ReanimationFailedError} from '@rheactorjs/errors'
 
 const logger = appLogger()
 

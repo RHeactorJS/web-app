@@ -1,6 +1,6 @@
 import {HttpProgress} from '../util/http'
-import {JsonWebToken, HttpProblem} from 'rheactor-models'
-import {URIValue} from 'rheactor-value-objects'
+import {JsonWebToken, HttpProblem} from 'models'
+import {URIValue} from 'value-objects'
 import {httpProblemfromException} from '../util/http-problem'
 
 export function AccountEmailChangeController ($stateParams, ClientStorageService, UserService) {

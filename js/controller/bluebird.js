@@ -1,6 +1,6 @@
 import {appLogger} from '../util/logger'
-import {HttpProblem} from 'rheactor-models'
-import {EntryNotFoundError} from '@resourcefulhumans/rheactor-errors'
+import {HttpProblem} from 'models'
+import {EntryNotFoundError} from '@rheactorjs/errors'
 
 /* globals trackJs */
 

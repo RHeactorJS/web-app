@@ -9,9 +9,9 @@ import {GoogleAnalyticsService} from './google-analytics'
 import {RegistrationModel} from '../model/registration'
 import {PasswordChangeModel} from '../model/password-change'
 import {PasswordChangeConfirmModel} from '../model/password-change-confirm'
-import {User, JsonWebToken} from 'rheactor-models'
-import {RHeactorImageServiceService} from './rheactor-image-service'
-import {URIValue} from 'rheactor-value-objects'
+import {User, JsonWebToken} from 'models'
+import {RHeactorImageServiceService} from './image-service'
+import {URIValue} from 'value-objects'
 
 export const RegisterRHeactorServices = angular => {
   angular

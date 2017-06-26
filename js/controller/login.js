@@ -1,5 +1,5 @@
 import {GenericController} from './generic'
-import {EmailValue, URIValue} from 'rheactor-value-objects'
+import {EmailValue, URIValue} from 'value-objects'
 
 export function LoginController (app) {
   app

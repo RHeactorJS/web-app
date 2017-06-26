@@ -1,5 +1,5 @@
-import {HttpProblem} from 'rheactor-models'
-import {URIValue} from 'rheactor-value-objects'
+import {HttpProblem} from 'models'
+import {URIValue} from 'value-objects'
 
 /**
  * Converts a http error to an HttpProblem

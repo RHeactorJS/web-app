@@ -1,5 +1,5 @@
 import {String as StringType} from 'tcomb'
-import {URIValue, URIValueType} from 'rheactor-value-objects'
+import {URIValue, URIValueType} from 'value-objects'
 
 const schemeAndHost = /^(https?:\/\/[^/]+)/
 

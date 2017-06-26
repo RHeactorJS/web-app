@@ -1,6 +1,6 @@
 /* global describe, it, beforeEach */
 
-import {URIValue} from 'rheactor-value-objects'
+import {URIValue} from 'value-objects'
 import {LiveCollection} from '../../js/util/live-collection'
 import {expect} from 'chai'
 

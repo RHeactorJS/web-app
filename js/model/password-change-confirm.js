@@ -1,4 +1,4 @@
-import {URIValue} from 'rheactor-value-objects'
+import {URIValue} from 'value-objects'
 import {String as StringValue} from 'tcomb'
 
 const $context = new URIValue('https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChangeConfirm')

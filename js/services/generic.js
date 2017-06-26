@@ -1,10 +1,10 @@
 import {httpProblemfromHttpError} from '../util/http-problem'
 import {auth, accept, ifMatch} from '../util/http'
 import Promise from 'bluebird'
-import {ApplicationError} from '@resourcefulhumans/rheactor-errors'
+import {ApplicationError} from '@rheactorjs/errors'
 import {JSONLD} from '../util/jsonld'
-import {URIValue, URIValueType, MaybeURIValueType} from 'rheactor-value-objects'
-import {ModelType, ListType, VersionNumberType, JsonWebTokenType, MaybeJsonWebTokenType} from 'rheactor-models'
+import {URIValue, URIValueType, MaybeURIValueType} from 'value-objects'
+import {ModelType, ListType, VersionNumberType, JsonWebTokenType, MaybeJsonWebTokenType} from 'models'
 import {String as StringType, Function as FunctionType, struct} from 'tcomb'
 
 export const APIServiceType = struct({
