@@ -1,13 +1,12 @@
 # web-app
 
+[![npm version](https://img.shields.io/npm/v/@rheactorjs/web-app.svg)](https://www.npmjs.com/package/@rheactorjs/web-app)
 [![Build Status](https://travis-ci.org/RHeactorJS/web-app.svg?branch=master)](https://travis-ci.org/RHeactorJS/web-app)
 [![monitored by greenkeeper.io](https://img.shields.io/badge/greenkeeper.io-monitored-brightgreen.svg)](http://greenkeeper.io/) 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![semantic-release](https://img.shields.io/badge/semver-semantic%20release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Test Coverage](https://codeclimate.com/github/RHeactorJS/web-app/badges/coverage.svg)](https://codeclimate.com/github/RHeactorJS/web-app/coverage)
 [![Code Climate](https://codeclimate.com/github/RHeactorJS/web-app/badges/gpa.svg)](https://codeclimate.com/github/RHeactorJS/web-app)
-
-[![NPM](https://nodei.co/npm/web-app.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-app/)
 
 This library contains the typical building blocks for a Angular 1 web application in the Resourceful Humans Bootstrap 4 design.
 
