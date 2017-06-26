@@ -20,7 +20,7 @@ export function httpProblemfromHttpError (httpError, detail) {
     status = 503 // Service Unavailable
     statusText = 'Connection failed'
   }
-  const url = 'https://github.com/RHeactor/nucleus/wiki/HttpProblem#' +
+  const url = 'https://github.com/RHeactorJS/nucleus/wiki/HttpProblem#' +
     httpError.status +
     '?statusText=' + encodeURIComponent(statusText) +
     '&detail=' + encodeURIComponent(detail)
@@ -34,7 +34,7 @@ export function httpProblemfromHttpError (httpError, detail) {
  * @returns {HttpProblem}
  */
 export function httpProblemfromException (err) {
-  const url = 'https://github.com/RHeactor/nucleus/wiki/Exception#' +
+  const url = 'https://github.com/RHeactorJS/nucleus/wiki/Exception#' +
     '?statusText=' + encodeURIComponent(err.message) +
     '&detail=' + encodeURIComponent(err)
   return new HttpProblem(new URIValue(url), err.message, 500, JSON.stringify(err))

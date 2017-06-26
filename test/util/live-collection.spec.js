@@ -11,7 +11,7 @@ describe('LiveCollection', function () {
     beforeEach(() => {
       // This is the dummy item in the collection
       dummyItem = {
-        $context: new URIValue('https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange'),
+        $context: new URIValue('https://github.com/RHeactorJS/nucleus/wiki/JsonLD#PasswordChange'),
         $id: new URIValue('https://example.com/dummy/17'),
         $version: 42,
         applyUpdatedDummyEvent: function () {
@@ -33,8 +33,8 @@ describe('LiveCollection', function () {
     it('should handle regular events', (done) => {
       // This is the dummy event that is emitted from the mocked event source
       let dummyUpdatingEvent = {
-        'https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange': {
-          $context: 'https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange',
+        'https://github.com/RHeactorJS/nucleus/wiki/JsonLD#PasswordChange': {
+          $context: 'https://github.com/RHeactorJS/nucleus/wiki/JsonLD#PasswordChange',
           $id: 'https://example.com/dummy/17',
           $version: 43
         }
@@ -52,8 +52,8 @@ describe('LiveCollection', function () {
 
     it('should ignore events for other items', (done) => {
       let dummyUpdatingEvent = {
-        'https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange': {
-          $context: 'https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange',
+        'https://github.com/RHeactorJS/nucleus/wiki/JsonLD#PasswordChange': {
+          $context: 'https://github.com/RHeactorJS/nucleus/wiki/JsonLD#PasswordChange',
           $id: 'https://example.com/dummy/18',
           $version: 43
         }
@@ -69,8 +69,8 @@ describe('LiveCollection', function () {
 
     it('should ignore events that have a lower version number', (done) => {
       let dummyUpdatingEvent = {
-        'https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange': {
-          $context: 'https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange',
+        'https://github.com/RHeactorJS/nucleus/wiki/JsonLD#PasswordChange': {
+          $context: 'https://github.com/RHeactorJS/nucleus/wiki/JsonLD#PasswordChange',
           $id: 'https://example.com/dummy/17',
           $version: 42
         }

@@ -43,7 +43,7 @@ Directives for
  
 Services
 
- - a [Generic Service](https://github.com/RHeactorJS/web-app/blob/master/js/services/generic.js) for accessing the RESTful, [JSON-LD](http://json-ld.org/) inspired API of [RHeactor applications](https://github.com/RHeactor).
+ - a [Generic Service](https://github.com/RHeactorJS/web-app/blob/master/js/services/generic.js) for accessing the RESTful, [JSON-LD](http://json-ld.org/) inspired API of [RHeactorJS applications](https://github.com/RHeactorJS).
  - *[see all services](https://github.com/RHeactorJS/web-app/blob/master/js/services/)*
  
 Utilities

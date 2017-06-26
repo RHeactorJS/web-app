@@ -1,6 +1,6 @@
-export const RegisterRHeactorDecorators = angular => {
+export const RegisterRHeactorJSDecorators = angular => {
   angular
-    .module('RHeactorDecoratorModule', [])
+    .module('RHeactorJSDecoratorModule', [])
     /**
      * Angular $rootScope.Scope.$once
      * Copyright (c) 2014 marlun78

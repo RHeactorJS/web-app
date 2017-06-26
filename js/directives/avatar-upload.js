@@ -2,7 +2,7 @@ import {httpProblemfromHttpError, httpProblemfromException} from '../util/http-p
 import {HttpProgress, accept, auth} from '../util/http'
 import Promise from 'bluebird'
 import {URIValue} from 'value-objects'
-import {RHeactorImageServiceService} from '../services/image-service'
+import {RHeactorJSImageServiceService} from '../services/image-service'
 import {HttpProblem} from 'models'
 
 export const AvatarUploadDirective = (Upload, $timeout, imageService, ClientStorageService, TokenService) => ({
@@ -28,11 +28,11 @@ export const AvatarUploadDirective = (Upload, $timeout, imageService, ClientStor
           Upload.base64DataUrl(file)
         )
         .spread((token, uploadURI, fileData) => {
-          const headers = Object.assign({}, auth(token).headers, accept(RHeactorImageServiceService.mimeType).headers)
+          const headers = Object.assign({}, auth(token).headers, accept(RHeactorJSImageServiceService.mimeType).headers)
           file.upload = Upload.http({
             url: uploadURI.toString(),
             data: {
-              $context: RHeactorImageServiceService.$context.toString(),
+              $context: RHeactorJSImageServiceService.$context.toString(),
               image: fileData.substr(fileData.match(/data:[^;]+;base64,/)[0].length),
               mimeType: file.type
             },

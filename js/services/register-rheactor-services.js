@@ -10,12 +10,12 @@ import {RegistrationModel} from '../model/registration'
 import {PasswordChangeModel} from '../model/password-change'
 import {PasswordChangeConfirmModel} from '../model/password-change-confirm'
 import {User, JsonWebToken} from 'models'
-import {RHeactorImageServiceService} from './image-service'
+import {RHeactorJSImageServiceService} from './image-service'
 import {URIValue} from 'value-objects'
 
-export const RegisterRHeactorServices = angular => {
+export const RegisterRHeactorJSServices = angular => {
   angular
-    .module('RHeactorServiceModule', [])
+    .module('RHeactorJSServiceModule', [])
     .factory('LoginService', ['$http', 'APIService', ($http, APIService) => {
       return new GenericAPIService($http, APIService, JsonWebToken.$context)
     }])
@@ -52,10 +52,10 @@ export const RegisterRHeactorServices = angular => {
     .factory('GoogleAnalyticsService', ['$rootScope', '$window', '$location', ($rootScope, $window, $location) => {
       return new GoogleAnalyticsService($rootScope, $window, $location)
     }])
-    .factory('RHeactorImageServiceService', ['$http', 'APIService', 'FrontendConfig', ($http, APIService, config) => {
-      return new RHeactorImageServiceService($http, APIService, new URIValue(config.imageService))
+    .factory('RHeactorJSImageServiceService', ['$http', 'APIService', 'FrontendConfig', ($http, APIService, config) => {
+      return new RHeactorJSImageServiceService($http, APIService, new URIValue(config.imageService))
     }])
-    .factory('RHeactorConnectionWatchInterceptor', ['$rootScope', $rootScope => ({
+    .factory('RHeactorJSConnectionWatchInterceptor', ['$rootScope', $rootScope => ({
       request: config => {
         $rootScope.$emit('connection.ok', config)
         return config
@@ -75,6 +75,6 @@ export const RegisterRHeactorServices = angular => {
     }
     )])
     .config(['$httpProvider', $httpProvider => {
-      $httpProvider.interceptors.push('RHeactorConnectionWatchInterceptor')
+      $httpProvider.interceptors.push('RHeactorJSConnectionWatchInterceptor')
     }])
 }

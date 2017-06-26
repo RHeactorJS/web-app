@@ -5,9 +5,9 @@ import {AppButtonDirective} from './app-button'
 import {MarkDownToHTMLDirective} from './markdown-to-html'
 import {AvatarUploadDirective} from './avatar-upload'
 
-export const RegisterRHeactorDirectives = angular => {
+export const RegisterRHeactorJSDirectives = angular => {
   angular
-    .module('RHeactorDirectiveModule', [])
+    .module('RHeactorJSDirectiveModule', [])
     .directive('bootstrapErrorStates', [() => {
       return BootstrapErrorStatesDirective
     }])
@@ -23,7 +23,7 @@ export const RegisterRHeactorDirectives = angular => {
     .directive('markdownToHtml', ['$location', '$sanitize', '$sce', ($location, $sanitize, $sce) => {
       return MarkDownToHTMLDirective($location, $sanitize, $sce)
     }])
-    .directive('avatarUpload', ['Upload', '$timeout', 'RHeactorImageServiceService', 'ClientStorageService', 'TokenService', (Upload, $timeout, RHeactorImageServiceService, ClientStorageService, TokenService) => {
-      return AvatarUploadDirective(Upload, $timeout, RHeactorImageServiceService, ClientStorageService, TokenService)
+    .directive('avatarUpload', ['Upload', '$timeout', 'RHeactorJSImageServiceService', 'ClientStorageService', 'TokenService', (Upload, $timeout, RHeactorJSImageServiceService, ClientStorageService, TokenService) => {
+      return AvatarUploadDirective(Upload, $timeout, RHeactorJSImageServiceService, ClientStorageService, TokenService)
     }])
 }

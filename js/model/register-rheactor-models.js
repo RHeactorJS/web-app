@@ -1,9 +1,9 @@
 import {LoginModel} from './login'
 import {PasswordChangeModel} from './password-change'
 
-export const RegisterRHeactorModels = angular => {
+export const RegisterRHeactorJSModels = angular => {
   angular
-    .module('RHeactorModelModule', [])
+    .module('RHeactorJSModelModule', [])
     .service('LoginModel', () => {
       return LoginModel
     })

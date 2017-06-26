@@ -4,16 +4,16 @@ import {Index} from 'models'
 import {accept} from '../util/http'
 
 const $context = new URIValue('https://github.com/RHeactorJS/image-service#Upload')
-const mimeType = 'application/vnd.resourceful-humans.image-service.v1+json'
+const mimeType = 'application/vnd.rheactorjs.image-service.v1+json'
 
 /**
  * @param $http
  * @param {APIService} apiService
  */
-export class RHeactorImageServiceService extends GenericAPIService {
+export class RHeactorJSImageServiceService extends GenericAPIService {
   constructor ($http, apiService, imageServiceURI) {
     super($http, apiService, $context)
-    URIValueType(imageServiceURI, ['RHeactorImageServiceService', 'imageServiceURI:URIValue'])
+    URIValueType(imageServiceURI, ['RHeactorJSImageServiceService', 'imageServiceURI:URIValue'])
     this.imageServiceURI = imageServiceURI
   }
 

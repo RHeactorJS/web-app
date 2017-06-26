@@ -1,7 +1,7 @@
 import {URIValue, EmailValueType} from 'value-objects'
 import {String as StringValue} from 'tcomb'
 
-const $context = new URIValue('https://github.com/RHeactor/nucleus/wiki/JsonLD#Registration')
+const $context = new URIValue('https://github.com/RHeactorJS/nucleus/wiki/JsonLD#Registration')
 
 export class RegistrationModel {
   constructor (email, password, firstname, lastname) {

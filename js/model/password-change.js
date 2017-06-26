@@ -1,6 +1,6 @@
 import {URIValue, EmailValueType} from 'value-objects'
 
-const $context = new URIValue('https://github.com/RHeactor/nucleus/wiki/JsonLD#PasswordChange')
+const $context = new URIValue('https://github.com/RHeactorJS/nucleus/wiki/JsonLD#PasswordChange')
 
 export class PasswordChangeModel {
   constructor (email) {

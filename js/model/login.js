@@ -1,7 +1,7 @@
 import {URIValue, EmailValueType} from 'value-objects'
 import {String as StringValue} from 'tcomb'
 
-const $context = new URIValue('https://github.com/RHeactor/nucleus/wiki/JsonLD#Login')
+const $context = new URIValue('https://github.com/RHeactorJS/nucleus/wiki/JsonLD#Login')
 
 export class LoginModel {
   constructor (email, password) {

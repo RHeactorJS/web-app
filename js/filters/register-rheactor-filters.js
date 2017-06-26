@@ -1,8 +1,8 @@
 import {IDParamFilter} from './idparam'
 
-export const RegisterRHeactorFilters = angular => {
+export const RegisterRHeactorJSFilters = angular => {
   angular
-    .module('RHeactorFilterModule', [])
+    .module('RHeactorJSFilterModule', [])
     .filter('idparam', ['$location', 'IDService', function ($location, IDService) {
       return IDParamFilter($location, IDService)
     }])
