@@ -10,7 +10,7 @@ export class ClientStorageService {
   /**
    * @param $window
    * @param $rootScope
-   * @param {APIService} APIService
+   * @param {API} APIService
    * @returns {ClientStorageService}
    */
   constructor ($window, $rootScope, APIService) {

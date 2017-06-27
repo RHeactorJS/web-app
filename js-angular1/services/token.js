@@ -6,7 +6,7 @@ const MaybeStringType = maybe(StringType)
 
 /**
  * @param $http
- * @param {APIService} apiService
+ * @param {API} apiService
  */
 export class TokenService extends GenericAPIService {
   constructor ($http, apiService) {

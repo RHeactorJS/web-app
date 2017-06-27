@@ -8,7 +8,7 @@ const mimeType = 'application/vnd.rheactorjs.image-service.v1+json'
 
 /**
  * @param $http
- * @param {APIService} apiService
+ * @param {API} apiService
  */
 export class RHeactorJSImageServiceService extends GenericAPIService {
   constructor ($http, apiService, imageServiceURI) {

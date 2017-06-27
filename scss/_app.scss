@@ -44,11 +44,6 @@ body > footer {
     }
   }
   padding: 1rem;
-  img.rhlogo {
-    max-width: 300px;
-    width: 100%;
-    opacity: 0.85;
-  }
   @include media-breakpoint-up(lg) {
     z-index: -100;
     position: absolute;

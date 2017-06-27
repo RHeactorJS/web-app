@@ -5,7 +5,7 @@ import {URIValue} from '@rheactorjs/value-objects'
 
 /**
  * @param $http
- * @param {APIService} apiService */
+ * @param {API} apiService */
 export class StatusService extends GenericAPIService {
   constructor ($http, apiService) {
     super($http, apiService, Status.$context)

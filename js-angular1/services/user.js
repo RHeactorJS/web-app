@@ -5,7 +5,7 @@ import {JSONLD} from '../util/jsonld'
 export class UserService extends GenericAPIService {
   /**
    * @param $http
-   * @param {APIService} apiService
+   * @param {API} apiService
    **/
   constructor ($http, apiService) {
     super($http, apiService, User.$context)
