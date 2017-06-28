@@ -2,4 +2,7 @@
   color: $text-on-brand-primary;
   margin: 1rem;
   text-align: center;
+  .material-icons {
+    float: none;
+  }
 }

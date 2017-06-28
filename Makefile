@@ -4,7 +4,7 @@ build/%.html: assets/%.html includes/*.html test/config.json
 	mkdir -p $(dir $@)
 	./node_modules/.bin/rheactorjs-build-views build test/config.json -i ./includes/ $< $@
 
-build: build/index.html build/app.min.js
+build: build/index.html build/app.min.js build/styles.min.css
 
 dist:
 	rm -rf dist
@@ -12,7 +12,7 @@ dist:
 
 # JavaScript
 
-build/app.min.js: build/app.js
+build/%.min.js: build/%.js
 	@mkdir -p $(dir $@)
 ifeq "${ENVIRONMENT}" "development"
 	cp $< $@
@@ -23,6 +23,23 @@ endif
 build/%.js: js/%.js js/**/*.js
 	@mkdir -p $(dir $@)
 	./node_modules/.bin/browserify $< -o $@ -t [ babelify ]
+
+# CSS
+
+build/%.css: scss/%.scss scss/_*.scss build/fonts
+	@mkdir -p $(dir $@)
+	./node_modules/.bin/node-sass $< $@
+
+build/fonts: node_modules/material-design-icons/iconfont/MaterialIcons-Regular.*
+	mkdir -p build/fonts
+	cp node_modules/material-design-icons/iconfont/MaterialIcons-Regular.* build/fonts/
+
+build/%.min.css: build/%.css
+ifeq ($(ENVIRONMENT),development)
+	cp $< $@
+else
+	./node_modules/.bin/uglifycss $< > $@
+endif
 
 # Helpers
 
