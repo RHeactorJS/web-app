@@ -4,7 +4,7 @@ build/%.html: assets/%.html includes/*.html test/config.json
 	mkdir -p $(dir $@)
 	./node_modules/.bin/rheactorjs-build-views build test/config.json -i ./includes/ $< $@
 
-build: build/index.html build/app.min.js build/styles.min.css
+build: build/index.html build/app.min.js build/styles.min.css build/jquery.min.js build/bootstrap.min.js build/tether.min.js
 
 dist:
 	rm -rf dist
@@ -23,6 +23,15 @@ endif
 build/%.js: js/%.js js/**/*.js
 	@mkdir -p $(dir $@)
 	./node_modules/.bin/browserify $< -o $@ -t [ babelify ]
+
+build/jquery.min.js: node_modules/jquery/dist/jquery.min.js
+	cp $< $@
+
+build/bootstrap.min.js: node_modules/bootstrap/dist/js/bootstrap.min.js
+	cp $< $@
+
+build/tether.min.js: node_modules/tether/dist/js/tether.min.js
+	cp $< $@
 
 # CSS
 

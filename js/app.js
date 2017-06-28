@@ -6,12 +6,15 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { API } from './service/api'
 import Status from './container/status'
 import Loading from './container/loading'
+import Navigation from './container/navigation'
+import Login from './container/login'
 import AppUpdate from './container/app-update'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer, { updateStatus, setConfig, doneLoading } from './state'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 const store = createStore(reducer)
 
@@ -44,6 +47,19 @@ ReactDOM.render(
     <AppUpdate />
   </Provider>,
   document.getElementById('app-update')
+)
+
+ReactDOM.render(
+  <Provider store={store}>
+    <Router>
+      <div>
+        <Navigation />
+        <Route exact path='/register' component={Login} />
+        <Route exact path='/login' component={Login} />
+      </div>
+    </Router>
+  </Provider>,
+  document.getElementById('main')
 )
 
 store.dispatch(doneLoading())

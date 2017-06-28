@@ -13,8 +13,7 @@
 <body>
 <%= includes.loading %>
 <aside id="app-update"></aside>
-<aside id="navigation"></aside>
-<main data-ui-view></main>
+<main id="main"></main>
 <%= includes.footer %>
 <script type="text/javascript">
   (function () {
@@ -32,5 +31,8 @@
   }());
 </script>
 <script type="text/javascript" src="/app.min.js?v=<%= data.version %>-<%= data.buildTime %>"></script>
+<script type="text/javascript" defer src="/jquery.min.js?v=<%= data.version %>-<%= data.buildTime %>"></script>
+<script type="text/javascript" defer src="/tether.min.js?v=<%= data.version %>-<%= data.buildTime %>"></script>
+<script type="text/javascript" defer src="/bootstrap.min.js?v=<%= data.version %>-<%= data.buildTime %>"></script>
 </body>
 </html>
