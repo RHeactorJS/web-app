@@ -15,6 +15,7 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer, { updateStatus, setConfig, doneLoading } from './state'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Status as StatusModel } from '@rheactorjs/models'
 
 const store = createStore(reducer)
 
@@ -30,7 +31,9 @@ if (statusEl) {
     statusEl
   )
   // Fetch status once and every minute
-  const fetchStatus = () => api.status().then(status => store.dispatch(updateStatus(status)))
+  const fetchStatus = () => api.status()
+    .then(status => store.dispatch(updateStatus(status)))
+    .catch(err => store.dispatch(updateStatus(new StatusModel('error', new Date(), config.version))))
   window.setInterval(fetchStatus, 1000 * 60)
   fetchStatus()
 }

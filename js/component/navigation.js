@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import classNames from 'classnames'
 
-export default ({loggedIn, appName}) => {
+export default ({loggedIn, appName, connected}) => {
   return (
     <nav className='navbar navbar-toggleable-sm navbar-inverse bg-primary fixed-top'>
       <button className='navbar-toggler navbar-toggler-right'
@@ -23,6 +24,15 @@ export default ({loggedIn, appName}) => {
           </li>
         </ul>
         <ul className='navbar-nav ml-auto mt-2 mt-sm-0'>
+          <li className='nav-item'>
+            <abbr className={classNames({'nav-link': true, 'connection-error': true, ok: connected, error: !connected})}>
+              {
+                connected
+                ? <i className='material-icons spin' title='Connection ok'>sync</i>
+                : <i className='material-icons danger' title='Connection failed …'>sync_problem</i>
+              }
+            </abbr>
+          </li>
           <li className='nav-item'>
             <Link to='/register' className='nav-link'>
               <i className='material-icons'>person_add</i>
