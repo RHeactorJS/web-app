@@ -2,7 +2,7 @@
 
 build/%.html: assets/%.html includes/*.html test/config.json
 	mkdir -p $(dir $@)
-	./node_modules/.bin/build-views build test/config.json -i ./includes/ $< $@
+	./node_modules/.bin/rheactorjs-build-views build test/config.json -i ./includes/ $< $@
 
 build: build/index.html build/app.min.js
 

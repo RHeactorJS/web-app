@@ -43,9 +43,10 @@
     "tcomb": "^3.2.21"
   },
   "devDependencies": {
-    "@rheactorjs/build-views": "^1.0.0",
+    "@rheactorjs/build-views": "^1.0.1",
     "babel-cli": "^6.24.1",
     "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.5.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
@@ -77,5 +78,7 @@
     "node": ">=6.10.2"
   },
   "dependencies": {
+    "react-redux": "^5.0.5",
+    "redux": "^3.7.1"
   }
 }
