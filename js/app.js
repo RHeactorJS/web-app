@@ -6,6 +6,7 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { API } from './service/api'
 import Status from './container/status'
 import Loading from './container/loading'
+import AppUpdate from './container/app-update'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore } from 'redux'
@@ -36,6 +37,13 @@ ReactDOM.render(
     <Loading />
   </Provider>,
   document.getElementById('app-loading')
+)
+
+ReactDOM.render(
+  <Provider store={store}>
+    <AppUpdate />
+  </Provider>,
+  document.getElementById('app-update')
 )
 
 store.dispatch(doneLoading())
