@@ -1,11 +1,9 @@
 import { connect } from 'react-redux'
 import Status from '../component/status'
 
-const mapStateToProps = ({status}) => {
-  return ({
-    frontendVersion: status.frontendVersion,
-    backendVersion: status.status ? status.status.version : false
-  })
-}
+const mapStateToProps = ({status, config}) => ({
+  frontendVersion: config.version,
+  backendVersion: status.version
+})
 
 export default connect(mapStateToProps)(Status)
