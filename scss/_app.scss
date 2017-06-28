@@ -7,9 +7,7 @@ body {
   @include gradient();
   .container {
     margin-top: $card-spacer-y;
-    @include media-breakpoint-up(lg) {
-      margin-top: 80px;
-    }
+    margin-top: 80px;
   }
 }
 

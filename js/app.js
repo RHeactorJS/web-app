@@ -33,7 +33,7 @@ if (statusEl) {
   // Fetch status once and every minute
   const fetchStatus = () => api.status()
     .then(status => store.dispatch(updateStatus(status)))
-    .catch(err => store.dispatch(updateStatus(new StatusModel('error', new Date(), config.version))))
+    .catch(() => store.dispatch(updateStatus(new StatusModel('error', new Date(), config.version))))
   window.setInterval(fetchStatus, 1000 * 60)
   fetchStatus()
 }

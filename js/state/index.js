@@ -2,11 +2,13 @@ import { combineReducers } from 'redux'
 import status from './status'
 import config from './config'
 import loading from './loading'
+import { reducer as formReducer } from 'redux-form'
 
 const rheactorJSApp = combineReducers({
   status,
   config,
-  loading
+  loading,
+  form: formReducer
 })
 
 export default rheactorJSApp

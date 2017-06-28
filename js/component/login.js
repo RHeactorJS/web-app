@@ -1,36 +1,51 @@
 import React from 'react'
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
+import { Field, reduxForm } from 'redux-form'
+import { isEmail } from '../util/is-email'
+import Promise from 'bluebird'
+import { HttpProblem } from '@rheactorjs/models'
+import { URIValue } from '@rheactorjs/value-objects'
+import { SubmissionError } from 'redux-form'
 
-const LoginScreen = () => {
+const validate = values => ({
+  email: !values.email || !isEmail(values.email),
+  password: !values.password || values.password.length < 8
+})
+
+const renderField = ({input, id, label, placeholder, tabIndex, required, disabled, type, meta: {dirty, error}}) => (
+  <fieldset className={classNames({'form-group': true, 'has-success': dirty && !error, 'has-danger': dirty && error})}>
+    <label htmlFor={id}>{label}</label>
+    <input {...input}
+           type={type}
+           placeholder={placeholder}
+           tabIndex={tabIndex}
+           required={required}
+           disabled={disabled}
+           className={classNames({
+             'form-control': true,
+             'form-control-success': dirty && !error,
+             'form-control-danger': dirty && error
+           })}
+    />
+  </fieldset>
+)
+
+const LoginForm = reduxForm({form: 'login', validate})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => {
   const from = ''
-  let activity = false // state
-  let formValid = false // state
-  let submitSuccess = false // state
-  let submitError = false // state
-  let email = '' //
-  let disableInput = !activity // vm.p.$active
-  let disableButton = !activity && !formValid // 'form.$invalid || vm.p.$active
-  const submit = () => {
-    console.log('Submit')
-  }
-  const problem = false
-  /**
-   <i className='material-icons' data-ng-show='!(form.$invalid || vm.p.$active || vm.initializing) && vm.p.$pristine'>send</i>
-   <i className='material-icons spin' data-ng-show='vm.p.$active'>hourglass_empty</i> <i className='material-icons'
-   data-ng-show='!(form.$invalid || vm.p.$active || vm.initializing) && vm.p.$success'>check_ok</i> <i className='material-icons'
-   data-ng-show='!(form.$invalid || vm.p.$active || vm.initializing) && vm.p.$error'>error</i>
-   */
-  const buttonIconClass = {'material-icons': true, spin: activity}
+  let disableInput = submitting
+  let disableButton = (submitting && !submitFailed) || !valid
+
+  const buttonIconClass = {'material-icons': true, spin: submitting}
   let buttonIconSymbol
-  if (!formValid) {
+  if (!valid) {
     buttonIconSymbol = 'block'
-  } else if (activity) {
+  } else if (submitting) {
     buttonIconSymbol = 'block'
-  } else if (submitSuccess) {
-    buttonIconSymbol = 'check_ok'
-  } else if (submitError) {
+  } else if (submitFailed) {
     buttonIconSymbol = 'error'
+  } else if (submitSucceeded) {
+    buttonIconSymbol = 'check_ok'
   } else {
     buttonIconSymbol = 'send'
   }
@@ -41,27 +56,27 @@ const LoginScreen = () => {
       <div className='alert alert-warning' role='alert'>
         <p>Your login token expired, so we have logged you out.</p>
       </div>
-  )
+    )
   }
   if (from === 'logout') {
     warning = (
       <div className='alert alert-success' role='alert'>
         <p>You have been logged out …</p>
       </div>
-  )
+    )
   }
 
-  let error
-  if (problem) {
-    switch (problem.title) {
+  let errorMessage
+  if (error) {
+    switch (error.title) {
       case 'EntryNotFoundError':
-        error = <AccountNotFoundError email={email} />
+        errorMessage = <AccountNotFoundError />
         break
       case 'AccessDeniedError':
-        error = <AccessDeniedError />
+        errorMessage = <AccessDeniedError />
         break
       default:
-        error = <GenericError problem={problem} />
+        errorMessage = <GenericError problem={error}/>
     }
   }
 
@@ -69,11 +84,11 @@ const LoginScreen = () => {
     <div className='container'>
       <article className='row'>
         <section className='col-xs-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3'>
-          <form name='form' className='card'>
+          <form name='form' className='card' onSubmit={ handleSubmit }>
             <div className='card-header'>
               <h1 className='card-title'>
                 {
-                  submitSuccess
+                  submitSucceeded
                     ? <i className='material-icons success'>check_circle</i>
                     : <i className='material-icons'>person</i>
                 }
@@ -85,70 +100,58 @@ const LoginScreen = () => {
               <p className='card-text'>
                 Please enter your email address and password in order to log in.
               </p>
-              <fieldset className='form-group'>
-                <label htmlFor='email'>email address</label>
-                <input tabIndex='1'
-                  className='form-control'
-                  type='email'
-                  id='email'
-                  required
-                  // bootstrap-error-states (TODO)
-                  // is-email (TODO)
-                  disabled={disableInput ? 'disabled' : ''}
-                  name='email'
-                  // auto-focus (TODO)
-                />
-                <p>
-                  <small>
-                    Don't have an account?
-                    <Link to='/register' className='text-nowrap'>Create a new one here …</Link>
-                  </small>
-                </p>
-              </fieldset>
-              <fieldset className='form-group'>
-                <label htmlFor='password'>
-                  password
-                </label>
-                <input tabIndex='2'
-                  className='form-control'
-                  type='password'
-                  id='password'
-                  required
-                       // bootstrap-error-states (TODO)
-                  minLength={8}
-                  disabled={disableInput ? 'disabled' : ''}
-                  name='password'
-                />
-                <p>
-                  <small>
-                    Forgot your password?
-                    <Link to='/lostPassword' className='text-nowrap'>Request a new one here …</Link>
-                  </small>
-                </p>
-              </fieldset>
+              <Field
+                component={renderField}
+                tabIndex='1'
+                type='email'
+                required
+                placeholder='e.g. "alex@example.com"'
+                label='email address'
+                disabled={disableInput ? 'disabled' : ''}
+                name='email'
+                id='email'
+                // auto-focus (TODO)
+              />
+              <p>
+                <small>
+                  Don't have an account?
+                  <Link to='/register' className='text-nowrap'>Create a new one here …</Link>
+                </small>
+              </p>
+              <Field
+                component={renderField}
+                tabIndex='2'
+                type='password'
+                required
+                label='password'
+                disabled={disableInput ? 'disabled' : ''}
+                name='password'
+                id='password'
+              />
+              <p>
+                <small>
+                  Forgot your password?
+                  <Link to='/lostPassword' className='text-nowrap'>Request a new one here …</Link>
+                </small>
+              </p>
             </div>
             <div className='card-footer'>
               <div className='controls'>
                 <button type='submit'
-                  className='btn btn-primary'
-                  disabled={disableButton ? 'disabled' : ''}
-                  onClick={submit}>
+                        className='btn btn-primary'
+                        disabled={disableButton ? 'disabled' : ''}>
                   <i className={classNames(buttonIconClass)}>{buttonIconSymbol}</i>
                   <span>Login</span>
                 </button>
               </div>
-              {error}
+              {errorMessage}
             </div>
           </form>
         </section>
       </article>
     </div>
   )
-}
-
-LoginScreen.navigationOptions = {
-  title: 'Log In'
-}
+})
 
 const GenericError = ({problem}) => (
   <div className='alert alert-danger' role='alert'>
@@ -158,12 +161,12 @@ const GenericError = ({problem}) => (
   </div>
 )
 
-const AccountNotFoundError = (email, navigation) => (
+const AccountNotFoundError = () => (
   <div>
     <div className='alert alert-danger' role='alert'>
       <p>
         <i className='material-icons'>error</i>
-        We could not find an user account with the email <em>{email}</em>.
+        We could not find an user account with that email.
       </p>
     </div>
     <div className='alert alert-warning alert-small' role='alert'>
@@ -175,7 +178,7 @@ const AccountNotFoundError = (email, navigation) => (
   </div>
 )
 
-const AccessDeniedError = (navigation) => (
+const AccessDeniedError = () => (
   <div>
     <div className='alert alert-danger' role='alert'>
       <p>
@@ -192,5 +195,26 @@ const AccessDeniedError = (navigation) => (
     </div>
   </div>
 )
+
+class LoginScreen extends React.Component {
+  submit = (values) => {
+    // print the form values to the console
+    console.log(values)
+    return Promise
+      .delay(1000)
+      .then(() => {
+        if (Math.random() > 0.5) return true
+        throw new SubmissionError({
+          _error: new HttpProblem(new URIValue('http://example.com'), 'Foo', 400, 'bar')
+        })
+      })
+  }
+
+  render () {
+    return (
+      <LoginForm onSubmit={this.submit}/>
+    )
+  }
+}
 
 export default LoginScreen
