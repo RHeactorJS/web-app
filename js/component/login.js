@@ -1,12 +1,13 @@
 import React from 'react'
 import classNames from 'classnames'
-import { Link } from 'react-router-dom'
-import { Field, reduxForm } from 'redux-form'
+import { Link, Redirect } from 'react-router-dom'
+import { Field, reduxForm, SubmissionError } from 'redux-form'
 import { isEmail } from '../util/is-email'
-import Promise from 'bluebird'
-import { HttpProblem } from '@rheactorjs/models'
+import { HttpProblem, JsonWebToken, User } from '@rheactorjs/models'
 import { URIValue } from '@rheactorjs/value-objects'
-import { SubmissionError } from 'redux-form'
+import { GenericModelAPIClient } from '../service/generic-api-client'
+import { JSONLD } from '../util/jsonld'
+import { API } from '../service/api'
 
 const validate = values => ({
   email: !values.email || !isEmail(values.email),
@@ -31,10 +32,12 @@ const renderField = ({input, id, label, placeholder, tabIndex, required, disable
   </fieldset>
 )
 
-const LoginForm = reduxForm({form: 'login', validate})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => {
-  const from = ''
+const LoginForm = reduxForm({
+  form: 'login',
+  validate
+})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, from}) => {
   let disableInput = submitting
-  let disableButton = (submitting && !submitFailed) || !valid
+  let disableButton = submitting || !valid
 
   const buttonIconClass = {'material-icons': true, spin: submitting}
   let buttonIconSymbol
@@ -70,7 +73,7 @@ const LoginForm = reduxForm({form: 'login', validate})(({handleSubmit, submittin
   if (error) {
     switch (error.title) {
       case 'EntryNotFoundError':
-        errorMessage = <AccountNotFoundError />
+        errorMessage = <EntryNotFoundError />
         break
       case 'AccessDeniedError':
         errorMessage = <AccessDeniedError />
@@ -114,7 +117,7 @@ const LoginForm = reduxForm({form: 'login', validate})(({handleSubmit, submittin
               />
               <p>
                 <small>
-                  Don't have an account?
+                  <span>Don't have an account?&nbsp;</span>
                   <Link to='/register' className='text-nowrap'>Create a new one here …</Link>
                 </small>
               </p>
@@ -130,7 +133,7 @@ const LoginForm = reduxForm({form: 'login', validate})(({handleSubmit, submittin
               />
               <p>
                 <small>
-                  Forgot your password?
+                  <span>Forgot your password?&nbsp;</span>
                   <Link to='/lostPassword' className='text-nowrap'>Request a new one here …</Link>
                 </small>
               </p>
@@ -161,7 +164,7 @@ const GenericError = ({problem}) => (
   </div>
 )
 
-const AccountNotFoundError = () => (
+const EntryNotFoundError = () => (
   <div>
     <div className='alert alert-danger' role='alert'>
       <p>
@@ -189,31 +192,46 @@ const AccessDeniedError = () => (
     <div className='alert alert-warning alert-small' role='alert'>
       <p>
         <i className='material-icons'>help_outline</i>
-        Forgot your password?
+        <span>Forgot your password?&nbsp;</span>
         <Link to='/lostPassword' className='text-nowrap'>Request a new one here …</Link>
       </p>
     </div>
   </div>
 )
 
+/**
+ * FIXME: Implement returnTo
+ */
 class LoginScreen extends React.Component {
+  constructor (props) {
+    super(props)
+    this.apiClient = new API(props.apiIndex, props.mimeType)
+    this.onLogin = props.onLogin
+    this.from = props.location.state && props.location.state.from
+    this.token = props.token
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.token) this.token = nextProps.token
+  }
+
   submit = (values) => {
-    // print the form values to the console
-    console.log(values)
-    return Promise
-      .delay(1000)
-      .then(() => {
-        if (Math.random() > 0.5) return true
-        throw new SubmissionError({
-          _error: new HttpProblem(new URIValue('http://example.com'), 'Foo', 400, 'bar')
-        })
+    this.from = false
+    const tokenClient = new GenericModelAPIClient(this.apiClient, JsonWebToken)
+    const userClient = new GenericModelAPIClient(this.apiClient, User)
+    return this.apiClient.index()
+      .then(index => JSONLD.getRelLink('login', index))
+      .then(uri => tokenClient.create(uri, values))
+      .then(token => userClient.get(new URIValue(token.sub), token).then(user => this.onLogin(token, user)))
+      .catch(err => {
+        throw new SubmissionError({_error: err})
       })
   }
 
   render () {
-    return (
-      <LoginForm onSubmit={this.submit}/>
-    )
+    return this.token
+      ? <Redirect to={{pathname: '/'}}/>
+      : <LoginForm onSubmit={this.submit} from={this.from}/>
   }
 }
 

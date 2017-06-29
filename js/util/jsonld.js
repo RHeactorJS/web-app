@@ -1,10 +1,7 @@
-import {appLogger} from './logger'
 import {ApplicationError} from '@rheactorjs/errors'
 import {URIValueType} from '@rheactorjs/value-objects'
 import {String as StringType, Function as FunctionType} from 'tcomb'
 import {ModelType} from '@rheactorjs/models'
-
-const logger = appLogger()
 
 /**
  * @param {Function} filterFunc
@@ -16,11 +13,11 @@ const getLink = (filterFunc, model) => {
   ModelType(model, ['JSONLD.getLink', 'model:Model'])
   let matched = model.$links.filter(filterFunc)
   if (!matched.length) {
-    logger.apiWarning('Link not found …', model.$links)
+    console.error('JSONLD', 'Link not found …', model.$links)
     throw new ApplicationError('Relation link not found …')
   }
   if (matched.length > 1) {
-    logger.apiWarning('Too many links matched …', matched)
+    console.error('JSONLD', 'Too many links matched …', matched)
     throw new ApplicationError('Too many relation links matched')
   }
   return matched[0].href
@@ -40,7 +37,7 @@ const getRelLink = (relation, model) => {
       return link.rel === relation
     }, model)
   } catch (err) {
-    logger.apiWarning('Tried to find relation', relation, 'on', model)
+    console.error('JSONLD', 'Tried to find relation', relation, 'on', model)
     throw err
   }
 }
@@ -58,7 +55,7 @@ const getListLink = (context, model) => {
       return link.list && link.subject.toString() === context.toString()
     }, model)
   } catch (err) {
-    logger.apiWarning('Tried to find link', context, 'on', model)
+    console.error('JSONLD', 'Tried to find link', context, 'on', model)
     throw err
   }
 }

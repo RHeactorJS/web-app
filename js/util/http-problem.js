@@ -10,14 +10,14 @@ import { URIValue } from '@rheactorjs/value-objects'
  */
 export function httpProblemfromFetchResponse (fetchResponse, detail) {
   return new Promise(resolve => {
-    if (/\+json$/.test(fetchResponse.headers.get('Content-Type'))) {
+    if (/\+json;?/.test(fetchResponse.headers.get('Content-Type'))) {
       return fetchResponse.json().then(resolve)
     } else {
       return resolve({})
     }
   })
     .then(data => {
-      if (data && data.$context && data.$context.toString() === HttpProblem.$context.toString()) {
+      if (data && data.$context && data.$context === HttpProblem.$context.toString()) {
         detail += ' (' + data.detail + ')'
         return new HttpProblem(new URIValue(data.type), data.title, data.status, detail)
       }
@@ -32,8 +32,6 @@ export function httpProblemfromFetchResponse (fetchResponse, detail) {
 }
 
 /**
- * To be used in Angular contexts, where errors are normally supressed
- *
  * @param {Error} err
  * @returns {HttpProblem}
  */

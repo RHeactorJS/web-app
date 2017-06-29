@@ -1,27 +1,46 @@
-/* global fetch */
+/* global fetch URL */
 
-import { accept } from '../util/headers'
-import { httpProblemfromFetchResponse } from '../util/http-problem'
-import { URIValueType } from '@rheactorjs/value-objects'
-import { String as StringType, Function as FunctionType } from 'tcomb'
+import { H, accept } from '../util/headers'
+import { httpProblemfromFetchResponse, httpProblemfromException } from '../util/http-problem'
+import { URIValueType, URIValue } from '@rheactorjs/value-objects'
+import { String as StringType, Function as FunctionType, irreducible, maybe, Object as ObjectType } from 'tcomb'
 import { ReanimationFailedError } from '@rheactorjs/errors'
-import { Index, Status } from '@rheactorjs/models'
+import { Index, Status, MaybeJsonWebTokenType } from '@rheactorjs/models'
 import Promise from 'bluebird'
 
+const MaybeObjectType = maybe(ObjectType)
 let indexPromise
 
-const get = (mimeType, uri, model) => {
-  URIValueType(uri, ['get()', 'uri:URIValue'])
-  StringType(mimeType, ['get()', 'mimeType:String'])
-  FunctionType(model.fromJSON, ['get()', 'model:Model'])
+const modelFetch = (method, mimeType, model, uri, token, data) => {
+  StringType(mimeType, ['modelFetch()', 'mimeType:String'])
+  FunctionType(model.fromJSON, ['modelFetch()', 'model:Model'])
+  URIValueType(uri, ['modelFetch()', 'uri:URIValue'])
+  MaybeJsonWebTokenType(token, ['modelFetch()', 'token:?JSONWebToken'])
+  MaybeObjectType(data, ['modelFetch()', 'data:?Object'])
+  const url = new URL(uri.toString())
+  let body
+  if (data) {
+    if (method === 'GET') {
+      Object.keys(data).map(k => url.searchParams.append(k, data[k]))
+    } else {
+      body = JSON.stringify(data)
+    }
+  }
+  const headers = new H().accept(mimeType)
+  if (token) headers.auth(token)
   return new Promise((resolve, reject) => {
-    fetch(`${uri}`, {headers: accept(mimeType)})
+    fetch(url, {method, headers: headers.get(), body})
       .then(res => {
-        if (!res.ok) return httpProblemfromFetchResponse(res, 'GET failed!').then(reject)
+        if (!res.ok) return httpProblemfromFetchResponse(res, `${method} failed!`).then(reject)
+        if (res.status >= 400) {
+          return httpProblemfromFetchResponse(res, `${method}: Server returned an error ${res.status}!`).then(reject)
+        }
         if (res.headers.get('Content-Type').indexOf(mimeType) === -1) return httpProblemfromFetchResponse(res, 'GET: response has wrong mimeType!').then(reject)
-        res.json().then(data => resolve(model.fromJSON(data)))
+        if (res.status === 200 || res.status === 201) return res.json().then(data => resolve(model.fromJSON(data)))
+        if (res.headers.get('Location')) return resolve(new URIValue(res.headers.get('Location')))
+        return resolve()
       })
-      .catch(reject)
+      .catch(({message}) => reject(httpProblemfromException(new Error(`${method} ${url} failed (${message})`))))
   })
 }
 
@@ -34,7 +53,8 @@ export class API {
   constructor (apiIndex, mimeType) {
     this.apiIndex = URIValueType(apiIndex, ['API()', 'apiIndex:URIValue'])
     this.mimeType = StringType(mimeType, ['API()', 'mimeType:String'])
-    this.get = get.bind(undefined, mimeType)
+    this.modelGet = modelFetch.bind(undefined, 'GET', mimeType)
+    this.modelPost = modelFetch.bind(undefined, 'POST', mimeType)
   }
 
   /**
@@ -52,13 +72,12 @@ export class API {
   index () {
     if (!indexPromise) {
       indexPromise = new Promise((resolve, reject) => {
-        fetch(`${this.apiIndex}?t=${Date.now()}`, {headers: accept(this.mimeType)})
-          .then(res => {
-            if (!res.ok) return httpProblemfromFetchResponse(res, 'APIService.index() failed!').then(reject)
-            if (res.headers.get('Content-Type').indexOf(this.mimeType) === -1) return httpProblemfromFetchResponse(res, 'APIService.index() has wrong mimeType!').then(reject)
-            res.json().then(data => resolve(Index.fromJSON(data)))
+        this.modelGet(Index, this.apiIndex, undefined, {t: Date.now()})
+          .then(resolve)
+          .catch(err => {
+            reject(err)
+            indexPromise = false
           })
-          .catch(reject)
       })
     }
     return indexPromise
@@ -72,6 +91,8 @@ export class API {
       .index()
       .then(({$links}) => $links)
       .filter(({rel}) => rel === 'status')
-      .spread(statusRelation => this.get(statusRelation.href, Status))
+      .spread(statusRelation => this.modelGet(Status, statusRelation.href))
   }
 }
+
+export const APIType = irreducible('APIType', x => x instanceof API)

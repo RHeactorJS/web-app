@@ -8,6 +8,8 @@ import Status from './container/status'
 import Loading from './container/loading'
 import Navigation from './container/navigation'
 import Login from './container/login'
+import Logout from './container/logout'
+import Home from './container/home'
 import AppUpdate from './container/app-update'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -19,11 +21,15 @@ import { Status as StatusModel } from '@rheactorjs/models'
 
 const store = createStore(reducer)
 
-const config = window.RHeactorJsAppConfig
+const config = {
+  ...window.RHeactorJsAppConfig,
+  apiIndex: new URIValue(window.RHeactorJsAppConfig.apiIndex),
+  buildTime: new Date(+window.RHeactorJsAppConfig.buildTime)
+}
 store.dispatch(setConfig(config))
 const statusEl = document.getElementById('react-status')
-const api = new API(new URIValue(config.apiIndex), config.mimeType)
 if (statusEl) {
+  const api = new API(config.apiIndex, config.mimeType)
   ReactDOM.render(
     <Provider store={store}>
       <Status />
@@ -57,8 +63,10 @@ ReactDOM.render(
     <Router>
       <div>
         <Navigation />
+        <Route exact path='/' component={Home} />
         <Route exact path='/register' component={Login} />
         <Route exact path='/login' component={Login} />
+        <Route exact path='/logout' component={Logout} />
       </div>
     </Router>
   </Provider>,
