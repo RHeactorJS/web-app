@@ -1,14 +1,19 @@
-import {Server} from 'node-static'
-import {createServer} from 'http'
-import {red, green} from 'colors'
+import { Server } from 'node-static'
+import { createServer } from 'http'
+import { red, green, yellow } from 'colors'
 
 const port = 8081
-const file = new Server('./build')
+const server = new Server('./build', {cache: 0})
 createServer((request, response) => {
   request.addListener('end', () => {
-    file
+    server
       .serve(request, response, (err, result) => {
         if (err) {
+          if (/\/[a-z]+/.test(request.url)) {
+            server.serveFile('/index.html', 200, {}, request, response)
+            console.error(yellow(`200 ${request.url}`))
+            return
+          }
           console.error(red(`${err.status} ${request.url}`))
           response.writeHead(err.status, err.headers)
           response.end()
