@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import AppUpdate from '../component/app-update'
+import AppUpdate from '../component/AppUpdate'
 
 const mapStateToProps = ({status, config}) => ({
   appName: config.appName,

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import Logout from '../component/logout'
+import Logout from '../component/Logout'
 import { logout } from '../state/auth'
 
 const mapDispatchToProps = ({

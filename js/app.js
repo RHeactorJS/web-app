@@ -5,12 +5,14 @@ import loadFont from 'meownica-web-fonts-loader'
 import { URIValue } from '@rheactorjs/value-objects'
 import { API } from './service/api'
 import Status from './container/status'
-import Loading from './container/loading'
-import Navigation from './container/navigation'
-import Login from './container/login'
-import Logout from './container/logout'
-import Home from './container/home'
-import AppUpdate from './container/app-update'
+import Loading from './container/Loading'
+import Navigation from './container/Navigation'
+import Login from './container/Login'
+import Logout from './container/Logout'
+import PasswordChange from './container/PasswordChange'
+import PasswordChangeConfirm from './container/PasswordChangeConfirm'
+import Home from './container/Home'
+import AppUpdate from './container/AppUpdate'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore } from 'redux'
@@ -67,6 +69,8 @@ ReactDOM.render(
         <Route exact path='/register' component={Login} />
         <Route exact path='/login' component={Login} />
         <Route exact path='/logout' component={Logout} />
+        <Route exact path='/password-change' component={PasswordChange} />
+        <Route exact path='/password-change-confirm' component={PasswordChangeConfirm} />
       </div>
     </Router>
   </Provider>,

@@ -12,8 +12,8 @@ export class GenericModelAPIClient {
    */
   constructor (api, model) {
     this.api = APIType(api, ['GenericModelAPIClient', 'api:api'])
-    this.get = this.api.modelGet.bind(undefined, model)
-    this.post = this.api.modelPost.bind(undefined, model)
+    this.apiGet = this.api.modelGet.bind(undefined, model)
+    this.apiPost = this.api.modelPost.bind(undefined, model)
   }
 
   /**
@@ -23,14 +23,14 @@ export class GenericModelAPIClient {
    * @param {boolean} fetch Fetch the created model, defaults to true, if false returns the location header value if present
    * @returns {Promise.<Model|String>}
    */
-  create (endpoint, data, token, fetch = false) {
+  create (endpoint, data, token = undefined, fetch = false) {
     ObjectType(data, ['GenericModelAPIClient.create', 'data:Object'])
     URIValueType(endpoint, ['GenericModelAPIClient.create', 'endpoint:URIValue'])
     MaybeJsonWebTokenType(token, ['GenericModelAPIClient.create', 'token:?JsonWebToken'])
     BooleanType(fetch, ['GenericModelAPIClient.create', 'token:?JsonWebToken'])
 
-    return this.post(endpoint, token, data)
-      .then(response => fetch ? this.get(response, token) : response)
+    return this.apiPost(endpoint, token, data)
+      .then(response => fetch ? this.apiGet(response, token) : response)
   }
 
   /**
@@ -67,7 +67,7 @@ export class GenericModelAPIClient {
   get (endpoint, token) {
     URIValueType(endpoint, ['GenericModelAPIClient.get', 'endpoint:URIValue'])
     MaybeJsonWebTokenType(token, ['GenericModelAPIClient.get', 'token:?JsonWebToken'])
-    return this.get(endpoint, token)
+    return this.apiGet(endpoint, token)
   }
 
   /**

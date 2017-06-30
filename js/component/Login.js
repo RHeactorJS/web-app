@@ -1,5 +1,4 @@
 import React from 'react'
-import classNames from 'classnames'
 import { Link, Redirect } from 'react-router-dom'
 import { Field, reduxForm, SubmissionError } from 'redux-form'
 import { isEmail } from '../util/is-email'
@@ -8,113 +7,50 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
+import { formInput, AppButton, FormHeader, GenericError } from './form-components'
 
 const validate = values => ({
   email: !values.email || !isEmail(values.email),
   password: !values.password || values.password.length < 8
 })
 
-const renderField = ({input, id, label, placeholder, tabIndex, required, disabled, type, meta: {dirty, error}}) => (
-  <fieldset className={classNames({'form-group': true, 'has-success': dirty && !error, 'has-danger': dirty && error})}>
-    <label htmlFor={id}>{label}</label>
-    <input {...input}
-           type={type}
-           placeholder={placeholder}
-           tabIndex={tabIndex}
-           required={required}
-           disabled={disabled}
-           className={classNames({
-             'form-control': true,
-             'form-control-success': dirty && !error,
-             'form-control-danger': dirty && error
-           })}
-    />
-  </fieldset>
-)
-
 const LoginForm = reduxForm({
   form: 'login',
   validate
 })(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, from}) => {
-  let disableInput = submitting
-  let disableButton = submitting || !valid
-
-  const buttonIconClass = {'material-icons': true, spin: submitting}
-  let buttonIconSymbol
-  if (!valid) {
-    buttonIconSymbol = 'block'
-  } else if (submitting) {
-    buttonIconSymbol = 'block'
-  } else if (submitFailed) {
-    buttonIconSymbol = 'error'
-  } else if (submitSucceeded) {
-    buttonIconSymbol = 'check_ok'
-  } else {
-    buttonIconSymbol = 'send'
-  }
-
-  let warning = null
-  if (from === 'TokenExpiredError') {
-    warning = (
-      <div className='alert alert-warning' role='alert'>
-        <p>Your login token expired, so we have logged you out.</p>
-      </div>
-    )
-  }
-  if (from === 'logout') {
-    warning = (
-      <div className='alert alert-success' role='alert'>
-        <p>You have been logged out …</p>
-      </div>
-    )
-  }
-
-  let errorMessage
-  if (error) {
-    switch (error.title) {
-      case 'EntryNotFoundError':
-        errorMessage = <EntryNotFoundError />
-        break
-      case 'AccessDeniedError':
-        errorMessage = <AccessDeniedError />
-        break
-      default:
-        errorMessage = <GenericError problem={error}/>
-    }
-  }
-
   return (
     <div className='container'>
       <article className='row'>
         <section className='col-xs-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3'>
           <form name='form' className='card' onSubmit={ handleSubmit }>
-            <div className='card-header'>
-              <h1 className='card-title'>
-                {
-                  submitSucceeded
-                    ? <i className='material-icons success'>check_circle</i>
-                    : <i className='material-icons'>person</i>
-                }
-                Login
-              </h1>
-            </div>
+            <FormHeader submitSucceeded={submitSucceeded} icon='person'>Login</FormHeader>
             <div className='card-block'>
-              {warning}
+              {{
+                'TokenExpiredError': (
+                  <div className='alert alert-warning' role='alert'>
+                    <p>Your login token expired, so we have logged you out.</p>
+                  </div>
+                ),
+                'logout': (
+                  <div className='alert alert-success' role='alert'>
+                    <p>You have been logged out …</p>
+                  </div>
+                )
+              }[from]}
               <p className='card-text'>
                 Please enter your email address and password in order to log in.
               </p>
               <Field
-                component={renderField}
+                component={formInput}
                 tabIndex='1'
                 type='email'
                 required
                 placeholder='e.g. "alex@example.com"'
-                label='email address'
-                disabled={disableInput ? 'disabled' : ''}
+                disabled={submitting ? 'disabled' : ''}
                 name='email'
                 id='email'
                 // auto-focus (TODO)
-              />
+              >email address</Field>
               <p>
                 <small>
                   <span>Don't have an account?&nbsp;</span>
@@ -122,32 +58,36 @@ const LoginForm = reduxForm({
                 </small>
               </p>
               <Field
-                component={renderField}
+                component={formInput}
                 tabIndex='2'
                 type='password'
                 required
-                label='password'
-                disabled={disableInput ? 'disabled' : ''}
+                disabled={submitting ? 'disabled' : ''}
                 name='password'
                 id='password'
-              />
+              >password</Field>
               <p>
                 <small>
                   <span>Forgot your password?&nbsp;</span>
-                  <Link to='/lostPassword' className='text-nowrap'>Request a new one here …</Link>
+                  <Link to='/password-change' className='text-nowrap'>Request a new one here …</Link>
                 </small>
               </p>
             </div>
             <div className='card-footer'>
               <div className='controls'>
-                <button type='submit'
-                        className='btn btn-primary'
-                        disabled={disableButton ? 'disabled' : ''}>
-                  <i className={classNames(buttonIconClass)}>{buttonIconSymbol}</i>
-                  <span>Login</span>
-                </button>
+                <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
+                           submitSucceeded={submitSucceeded}>Login</AppButton>
               </div>
-              {errorMessage}
+              { error && (() => {
+                switch (error.title) {
+                  case 'EntryNotFoundError':
+                    return <AccountNotFoundError />
+                  case 'AccessDeniedError':
+                    return <AccessDeniedError />
+                  default:
+                    return <GenericError problem={error}/>
+                }
+              })()}
             </div>
           </form>
         </section>
@@ -156,15 +96,7 @@ const LoginForm = reduxForm({
   )
 })
 
-const GenericError = ({problem}) => (
-  <div className='alert alert-danger' role='alert'>
-    <i className='material-icons'>error</i>
-    {problem.title}<br />
-    <small>{problem.detail}</small>
-  </div>
-)
-
-const EntryNotFoundError = () => (
+export const AccountNotFoundError = () => (
   <div>
     <div className='alert alert-danger' role='alert'>
       <p>
@@ -193,7 +125,7 @@ const AccessDeniedError = () => (
       <p>
         <i className='material-icons'>help_outline</i>
         <span>Forgot your password?&nbsp;</span>
-        <Link to='/lostPassword' className='text-nowrap'>Request a new one here …</Link>
+        <Link to='/password-change' className='text-nowrap'>Request a new one here …</Link>
       </p>
     </div>
   </div>
@@ -211,17 +143,17 @@ class LoginScreen extends React.Component {
     this.token = props.token
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.token) this.token = nextProps.token
   }
 
-  submit = (values) => {
+  submit = ({email, password}) => {
     this.from = false
     const tokenClient = new GenericModelAPIClient(this.apiClient, JsonWebToken)
     const userClient = new GenericModelAPIClient(this.apiClient, User)
     return this.apiClient.index()
       .then(index => JSONLD.getRelLink('login', index))
-      .then(uri => tokenClient.create(uri, values))
+      .then(uri => tokenClient.create(uri, {email, password}))
       .then(token => userClient.get(new URIValue(token.sub), token).then(user => this.onLogin(token, user)))
       .catch(err => {
         throw new SubmissionError({_error: err})

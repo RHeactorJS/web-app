@@ -9,7 +9,7 @@ createServer((request, response) => {
     server
       .serve(request, response, (err, result) => {
         if (err) {
-          if (/\/[a-z]+/.test(request.url)) {
+          if (/^\/[a-zA-Z-]+(\?.+)?$/.test(request.url)) {
             server.serveFile('/index.html', 200, {}, request, response)
             console.error(yellow(`200 ${request.url}`))
             return

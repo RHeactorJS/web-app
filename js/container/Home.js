@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import Home from '../component/home'
+import Home from '../component/Home'
 
 const mapStateToProps = ({auth: {token}}) => ({
   token

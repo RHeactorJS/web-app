@@ -35,8 +35,11 @@ const modelFetch = (method, mimeType, model, uri, token, data) => {
         if (res.status >= 400) {
           return httpProblemfromFetchResponse(res, `${method}: Server returned an error ${res.status}!`).then(reject)
         }
-        if (res.headers.get('Content-Type').indexOf(mimeType) === -1) return httpProblemfromFetchResponse(res, 'GET: response has wrong mimeType!').then(reject)
-        if (res.status === 200 || res.status === 201) return res.json().then(data => resolve(model.fromJSON(data)))
+        const clength = res.headers.get('Content-Length')
+        if (+clength) {
+          if (res.headers.get('Content-Type').indexOf(mimeType) === -1) return httpProblemfromFetchResponse(res, 'GET: response has wrong mimeType!').then(reject)
+          return res.json().then(data => resolve(model.fromJSON(data)))
+        }
         if (res.headers.get('Location')) return resolve(new URIValue(res.headers.get('Location')))
         return resolve()
       })
