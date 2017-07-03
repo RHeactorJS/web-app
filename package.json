@@ -25,7 +25,30 @@
     "url": "https://github.com/RHeactorJS/web-app/issues"
   },
   "homepage": "https://github.com/RHeactorJS/web-app#readme",
-  "peerDependencies": {},
+  "dependencies": {
+    "@rheactorjs/errors": "1.x",
+    "@rheactorjs/models": "1.x",
+    "@rheactorjs/value-objects": "1.x",
+    "bluebird": "^3.4.7",
+    "bootstrap": "4.0.0-alpha.6",
+    "classnames": "^2.2.5",
+    "compare-versions": "^3.0.0",
+    "event-source-polyfill": "^0.0.9",
+    "jquery": "^3.2.1",
+    "lodash": "^4.17.4",
+    "material-design-icons": "^3.0.1",
+    "meownica-web-fonts-loader": "^1.2.1",
+    "moment": "^2.17.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.5",
+    "react-router-dom": "^4.1.1",
+    "redux": "^3.7.1",
+    "redux-form": "^6.8.0",
+    "showdown": "^1.6.0",
+    "tcomb": "^3.2.21",
+    "tether": "^1.4.0"
+  },
   "devDependencies": {
     "@rheactorjs/build-views": "^1.0.1",
     "babel-cli": "^6.24.1",
@@ -63,29 +86,5 @@
   "main": "dist/index.js",
   "engines": {
     "node": ">=6.10.2"
-  },
-  "dependencies": {
-    "@rheactorjs/errors": "1.x",
-    "@rheactorjs/models": "1.x",
-    "@rheactorjs/value-objects": "1.x",
-    "bluebird": "^3.4.7",
-    "bootstrap": "4.0.0-alpha.6",
-    "classnames": "^2.2.5",
-    "compare-versions": "^3.0.0",
-    "event-source-polyfill": "^0.0.9",
-    "jquery": "^3.2.1",
-    "lodash": "^4.17.4",
-    "material-design-icons": "^3.0.1",
-    "meownica-web-fonts-loader": "^1.2.1",
-    "moment": "^2.17.1",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-redux": "^5.0.5",
-    "react-router-dom": "^4.1.1",
-    "redux": "^3.7.1",
-    "redux-form": "^6.8.0",
-    "showdown": "^1.6.0",
-    "tcomb": "^3.2.21",
-    "tether": "^1.4.0"
   }
 }
