@@ -5,18 +5,19 @@ import { httpProblemfromFetchResponse, httpProblemfromException } from '../util/
 import { URIValueType, URIValue } from '@rheactorjs/value-objects'
 import { String as StringType, Function as FunctionType, irreducible, maybe, Object as ObjectType } from 'tcomb'
 import { ReanimationFailedError } from '@rheactorjs/errors'
-import { Index, Status, MaybeJsonWebTokenType } from '@rheactorjs/models'
+import { Index, Status, MaybeJsonWebTokenType, MaybeVersionNumberType } from '@rheactorjs/models'
 import Promise from 'bluebird'
 
 const MaybeObjectType = maybe(ObjectType)
 let indexPromise
 
-const modelFetch = (method, mimeType, model, uri, token, data) => {
+const modelFetch = (method, mimeType, model, uri, token, data, version) => {
   StringType(mimeType, ['modelFetch()', 'mimeType:String'])
   FunctionType(model.fromJSON, ['modelFetch()', 'model:Model'])
   URIValueType(uri, ['modelFetch()', 'uri:URIValue'])
   MaybeJsonWebTokenType(token, ['modelFetch()', 'token:?JSONWebToken'])
   MaybeObjectType(data, ['modelFetch()', 'data:?Object'])
+  MaybeVersionNumberType(version, ['modelFetch()', 'version:?VersionNumber'])
   const url = new URL(uri.toString())
   let body
   if (data) {
@@ -28,6 +29,7 @@ const modelFetch = (method, mimeType, model, uri, token, data) => {
   }
   const headers = new H().accept(mimeType)
   if (token) headers.auth(token)
+  if (version) headers.ifMatch(version)
   return new Promise((resolve, reject) => {
     fetch(url, {method, headers: headers.get(), body})
       .then(res => {
@@ -58,6 +60,7 @@ export class API {
     this.mimeType = StringType(mimeType, ['API()', 'mimeType:String'])
     this.modelGet = modelFetch.bind(undefined, 'GET', mimeType)
     this.modelPost = modelFetch.bind(undefined, 'POST', mimeType)
+    this.modelPut = modelFetch.bind(undefined, 'PUT', mimeType)
   }
 
   /**

@@ -7,11 +7,11 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
-import { formInput, AppButton, FormHeader, GenericError } from './form-components'
+import { formInput, AppButton, FormHeader, GenericError, FormCard } from './form-components'
 import { AccountNotFoundError } from './Login'
 
-const validate = values => ({
-  email: !values.email || !isEmail(values.email)
+const validate = ({email}) => ({
+  email: !email || !isEmail(email)
 })
 
 const PasswordChangeForm = reduxForm({
@@ -19,57 +19,53 @@ const PasswordChangeForm = reduxForm({
   validate
 })(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => {
   return (
-    <div className='container'>
-      <article className='row'>
-        <section className='col-xs-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3'>
-          <form name='form' className='card' onSubmit={ handleSubmit }>
-            <FormHeader submitSucceeded={submitSucceeded} icon='settings_backup_restore'>Reset your
-              password</FormHeader>
-            { submitSucceeded && (
-              <div className='card-block'>
-                <div className="alert alert-success" role="alert">
-                  <p>We've sent you a confirmation link. Please check your email inbox.</p>
-                </div>
-              </div>
-            )}
-            { !submitSucceeded && (
-              <div className='card-block'>
-                <p className='card-text'>
-                  Please enter your email address and password in order to log in.
-                </p>
-                <Field
-                  component={formInput}
-                  tabIndex='1'
-                  type='email'
-                  required
-                  placeholder='e.g. "alex@example.com"'
-                  disabled={submitting ? 'disabled' : ''}
-                  name='email'
-                  id='email'
-                  // auto-focus (TODO)
-                >email address</Field>
-              </div>
-            )}
-            { !submitSucceeded && (
-              <div className='card-footer'>
-                <div className='controls'>
-                  <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
-                             submitSucceeded={submitSucceeded}>Continue</AppButton>
-                </div>
-                { error && (() => {
-                  switch (error.title) {
-                    case 'EntryNotFoundError':
-                      return <AccountNotFoundError />
-                    default:
-                      return <GenericError problem={error}/>
-                  }
-                })()}
-              </div>
-            )}
-          </form>
-        </section>
-      </article>
-    </div>
+    <FormCard>
+      <form name='form' onSubmit={ handleSubmit }>
+        <FormHeader submitSucceeded={submitSucceeded} icon='settings_backup_restore'>Reset your
+          password</FormHeader>
+        { submitSucceeded && (
+          <div className='card-block'>
+            <div className="alert alert-success" role="alert">
+              <p>We've sent you a confirmation link. Please check your email inbox.</p>
+            </div>
+          </div>
+        )}
+        { !submitSucceeded && (
+          <div className='card-block'>
+            <p className='card-text'>
+              Please enter your email address and password in order to log in.
+            </p>
+            <Field
+              component={formInput}
+              tabIndex='1'
+              type='email'
+              required
+              disabled={submitting ? 'disabled' : ''}
+              name='email'
+              id='email'
+              label='email address'
+              autoFocus
+            />
+          </div>
+        )}
+        { !submitSucceeded && (
+          <div className='card-footer'>
+            <div className='controls'>
+              <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
+                         submitSucceeded={submitSucceeded}>Continue</AppButton>
+            </div>
+            { error && (() => {
+              switch (error.title) {
+                case 'EntryNotFoundError':
+                  return <AccountNotFoundError />
+                default:
+                  return <GenericError problem={error}/>
+              }
+            })()}
+          </div>
+        )}
+      </form>
+    </FormCard>
   )
 })
 

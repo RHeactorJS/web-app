@@ -1,5 +1,9 @@
 const AUTHENTICATE = 'AUTHENTICATE'
+const TOKEN = 'TOKEN'
+const USER = 'USER'
 const LOGOUT = 'LOGOUT'
+const AUTOLOGIN_COMPLETE = 'AUTOLOGIN_COMPLETE'
+const USER_UPDATED = 'USER_UPDATED'
 
 export const authenticate = (token, user) => ({
   type: AUTHENTICATE,
@@ -11,15 +15,41 @@ export const logout = () => ({
   type: LOGOUT
 })
 
-const auth = (state = false, action) => {
+export const token = token => ({
+  type: TOKEN,
+  token
+})
+
+export const user = user => ({
+  type: USER,
+  user
+})
+
+export const autologinComplete = (success, error) => ({
+  type: AUTOLOGIN_COMPLETE,
+  error
+})
+
+export const userUpdated = (property, value) => ({
+  type: USER_UPDATED,
+  property,
+  value
+})
+
+const auth = (state = {token: false, user: false, autologinComplete: false, autologinError: undefined}, action) => {
   switch (action.type) {
     case AUTHENTICATE:
-      return {
-        token: action.token,
-        user: action.user
-      }
+      return {...state, token: action.token, user: action.user}
     case LOGOUT:
-      return false
+      return {...state, token: false, user: false}
+    case TOKEN:
+      return {...state, token: action.token}
+    case USER:
+      return {...state, user: action.user}
+    case AUTOLOGIN_COMPLETE:
+      return {...state, autologinComplete: true, autologinError: state.error}
+    case USER_UPDATED: // FIXME: Use Immutable user model
+      return {...state, user: {...state.user, [action.property]: action.value, $version: state.user.$version + 1}}
     default:
       return state
   }

@@ -14,6 +14,7 @@ export class GenericModelAPIClient {
     this.api = APIType(api, ['GenericModelAPIClient', 'api:api'])
     this.apiGet = this.api.modelGet.bind(undefined, model)
     this.apiPost = this.api.modelPost.bind(undefined, model)
+    this.apiPut = this.api.modelPut.bind(undefined, model)
   }
 
   /**
@@ -141,14 +142,7 @@ export class GenericModelAPIClient {
     URIValueType(endpoint, ['GenericModelAPIClient.update', 'endpoint:URIValue'])
     VersionNumberType(version, ['GenericModelAPIClient.update', 'version:VersionNumber'])
     JsonWebTokenType(token, ['GenericModelAPIClient.update', 'token:JsonWebToken'])
-    const config = {
-      headers: Object.assign(accept(this.api.mimeType).headers, ifMatch(version).headers, auth(token).headers)
-    }
-    return this.$http.put(endpoint.toString(), data, config)
-      .then(response => handleErrorResponses(response))
-      .catch(err => err.status, err => {
-        throw httpProblemfromFetchError(err, 'Updating of ' + endpoint + ' failed!')
-      })
+    return this.apiPut(endpoint, token, data, version)
   }
 
   /**

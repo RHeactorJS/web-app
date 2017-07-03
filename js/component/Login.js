@@ -7,11 +7,11 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
-import { formInput, AppButton, FormHeader, GenericError } from './form-components'
+import { formInput, AppButton, FormHeader, GenericError, FormCard } from './form-components'
 
-const validate = values => ({
-  email: !values.email || !isEmail(values.email),
-  password: !values.password || values.password.length < 8
+const validate = ({email, password}) => ({
+  email: !email || !isEmail(email),
+  password: !password || password.length < 8
 })
 
 const LoginForm = reduxForm({
@@ -19,80 +19,79 @@ const LoginForm = reduxForm({
   validate
 })(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, from}) => {
   return (
-    <div className='container'>
-      <article className='row'>
-        <section className='col-xs-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3'>
-          <form name='form' className='card' onSubmit={ handleSubmit }>
-            <FormHeader submitSucceeded={submitSucceeded} icon='person'>Login</FormHeader>
-            <div className='card-block'>
-              {{
-                'TokenExpiredError': (
-                  <div className='alert alert-warning' role='alert'>
-                    <p>Your login token expired, so we have logged you out.</p>
-                  </div>
-                ),
-                'logout': (
-                  <div className='alert alert-success' role='alert'>
-                    <p>You have been logged out …</p>
-                  </div>
-                )
-              }[from]}
-              <p className='card-text'>
-                Please enter your email address and password in order to log in.
-              </p>
-              <Field
-                component={formInput}
-                tabIndex='1'
-                type='email'
-                required
-                placeholder='e.g. "alex@example.com"'
-                disabled={submitting ? 'disabled' : ''}
-                name='email'
-                id='email'
-                // auto-focus (TODO)
-              >email address</Field>
-              <p>
-                <small>
-                  <span>Don't have an account?&nbsp;</span>
-                  <Link to='/register' className='text-nowrap'>Create a new one here …</Link>
-                </small>
-              </p>
-              <Field
-                component={formInput}
-                tabIndex='2'
-                type='password'
-                required
-                disabled={submitting ? 'disabled' : ''}
-                name='password'
-                id='password'
-              >password</Field>
-              <p>
-                <small>
-                  <span>Forgot your password?&nbsp;</span>
-                  <Link to='/password-change' className='text-nowrap'>Request a new one here …</Link>
-                </small>
-              </p>
-            </div>
-            <div className='card-footer'>
-              <div className='controls'>
-                <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
-                           submitSucceeded={submitSucceeded}>Login</AppButton>
+    <FormCard>
+      <form name='form' onSubmit={ handleSubmit }>
+        <FormHeader submitSucceeded={submitSucceeded} icon='person'>Login</FormHeader>
+        <div className='card-block'>
+          {{
+            'TokenExpiredError': (
+              <div className='alert alert-warning' role='alert'>
+                <p>Your login token expired, so we have logged you out.</p>
               </div>
-              { error && (() => {
-                switch (error.title) {
-                  case 'EntryNotFoundError':
-                    return <AccountNotFoundError />
-                  case 'AccessDeniedError':
-                    return <AccessDeniedError />
-                  default:
-                    return <GenericError problem={error}/>
-                }
-              })()}
-            </div>
-          </form>
-        </section>
-      </article>
-    </div>
+            ),
+            'logout': (
+              <div className='alert alert-success' role='alert'>
+                <p>You have been logged out …</p>
+              </div>
+            )
+          }[from]}
+          <p className='card-text'>
+            Please enter your email address and password in order to log in.
+          </p>
+          <Field
+            component={formInput}
+            tabIndex='1'
+            type='email'
+            required
+            disabled={submitting ? 'disabled' : ''}
+            name='email'
+            id='email'
+            label='email address'
+            autoFocus
+          >
+            <p>
+              <small>
+                <span>Don't have an account?&nbsp;</span>
+                <Link to='/register' className='text-nowrap'>Create a new one here …</Link>
+              </small>
+            </p>
+          </Field>
+          <Field
+            component={formInput}
+            tabIndex='2'
+            type='password'
+            required
+            disabled={submitting ? 'disabled' : ''}
+            name='password'
+            id='password'
+            label='password'
+          >
+            <p>
+              <small>
+                <span>Forgot your password?&nbsp;</span>
+                <Link to='/password-change' className='text-nowrap'>Request a new one here …</Link>
+              </small>
+            </p>
+          </Field>
+        </div>
+        <div className='card-footer'>
+          <div className='controls'>
+            <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
+                       submitSucceeded={submitSucceeded}>Login</AppButton>
+          </div>
+          { error && (() => {
+            switch (error.title) {
+              case 'EntryNotFoundError':
+                return <AccountNotFoundError />
+              case 'AccessDeniedError':
+                return <AccessDeniedError />
+              default:
+                return <GenericError problem={error}/>
+            }
+          })()}
+        </div>
+      </form>
+    </FormCard>
   )
 })
 
@@ -131,20 +130,18 @@ const AccessDeniedError = () => (
   </div>
 )
 
-/**
- * FIXME: Implement returnTo
- */
 class LoginScreen extends React.Component {
   constructor (props) {
     super(props)
     this.apiClient = new API(props.apiIndex, props.mimeType)
     this.onLogin = props.onLogin
     this.from = props.location.state && props.location.state.from
+    this.returnTo = props.location.returnTo || '/'
     this.token = props.token
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.token) this.token = nextProps.token
+  componentWillReceiveProps ({token}) {
+    this.token = token
   }
 
   submit = ({email, password}) => {
@@ -162,7 +159,7 @@ class LoginScreen extends React.Component {
 
   render () {
     return this.token
-      ? <Redirect to={{pathname: '/'}}/>
+      ? <Redirect to={{pathname: this.returnTo}}/>
       : <LoginForm onSubmit={this.submit} from={this.from}/>
   }
 }

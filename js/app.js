@@ -9,8 +9,12 @@ import Loading from './container/Loading'
 import Navigation from './container/Navigation'
 import Login from './container/Login'
 import Logout from './container/Logout'
+import Registration from './container/Registration'
+import Activation from './container/Activation'
 import PasswordChange from './container/PasswordChange'
 import PasswordChangeConfirm from './container/PasswordChangeConfirm'
+import AccountProfile from './container/AccountProfile'
+import { LoadUserDataFromClientStorage, ClientStoragePropertyToken, ClientStoragePropertyUser } from './container/ClientStorage'
 import Home from './container/Home'
 import AppUpdate from './container/AppUpdate'
 import React from 'react'
@@ -66,11 +70,16 @@ ReactDOM.render(
       <div>
         <Navigation />
         <Route exact path='/' component={Home} />
-        <Route exact path='/register' component={Login} />
+        <Route exact path='/register' component={Registration} />
         <Route exact path='/login' component={Login} />
         <Route exact path='/logout' component={Logout} />
+        <Route exact path='/activate' component={Activation} />
         <Route exact path='/password-change' component={PasswordChange} />
         <Route exact path='/password-change-confirm' component={PasswordChangeConfirm} />
+        <Route exact path='/account/profile' component={AccountProfile} />
+        <LoadUserDataFromClientStorage />
+        <ClientStoragePropertyToken name='token' equals={(t1, t2) => t1.token === t2.token} />
+        <ClientStoragePropertyUser name='user' equals={(u1, u2) => u1.$id.toString() === u2.$id.toString() && u1.$version === u2.$version} />
       </div>
     </Router>
   </Provider>,

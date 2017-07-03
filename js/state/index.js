@@ -3,6 +3,7 @@ import status from './status'
 import config from './config'
 import loading from './loading'
 import auth from './auth'
+import activation from './activation'
 import { reducer as formReducer } from 'redux-form'
 
 const rheactorJSApp = combineReducers({
@@ -10,6 +11,7 @@ const rheactorJSApp = combineReducers({
   config,
   loading,
   auth,
+  activation,
   form: formReducer
 })
 
@@ -18,3 +20,4 @@ export * from './status'
 export * from './config'
 export * from './loading'
 export * from './auth'
+export * from './activation'
