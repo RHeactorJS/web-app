@@ -6,16 +6,16 @@ export const formInput = ({input, id, label, tabIndex, autoFocus, required, disa
     <fieldset className={classNames({'form-group': true, 'has-success': dirty && !error, 'has-danger': dirty && error})}>
       <label htmlFor={id}>{label}</label>
       <input {...input}
-        type={type}
-        tabIndex={tabIndex}
-        required={required}
-        disabled={disabled}
-        autoFocus={autoFocus}
-        className={classNames({
-          'form-control': true,
-          'form-control-success': dirty && !error,
-          'form-control-danger': dirty && error
-        })}
+             type={type}
+             tabIndex={tabIndex}
+             required={required}
+             disabled={disabled}
+             autoFocus={autoFocus}
+             className={classNames({
+               'form-control': true,
+               'form-control-success': dirty && !error,
+               'form-control-danger': dirty && error
+             })}
       />
       {children}
     </fieldset>
@@ -44,14 +44,12 @@ export const GenericError = ({problem}) => (
 )
 
 export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, children}) => {
-  const disableButton = submitting || !valid
-
-  const buttonIconClass = {'material-icons': true, spin: submitting}
+  const buttonIconClass = classNames({'material-icons': true, spin: submitting})
   let buttonIconSymbol
   if (!valid) {
     buttonIconSymbol = 'block'
   } else if (submitting) {
-    buttonIconSymbol = 'block'
+    buttonIconSymbol = 'hourglass_empty'
   } else if (submitFailed) {
     buttonIconSymbol = 'error'
   } else if (submitSucceeded) {
@@ -59,12 +57,12 @@ export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, chi
   } else {
     buttonIconSymbol = 'send'
   }
-
+  const disabled = !valid || submitting
+  const attrs = {}
+  if (disabled) attrs.disabled = true
   return (
-    <button type='submit'
-      className='btn btn-primary'
-      disabled={disableButton ? 'disabled' : ''}>
-      <i className={classNames(buttonIconClass)}>{buttonIconSymbol}</i>
+    <button type='submit' className='btn btn-primary' {...attrs}>
+      <i className={buttonIconClass}>{buttonIconSymbol}</i>
       <span>{children}</span>
     </button>
   )
