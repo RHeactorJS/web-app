@@ -7,7 +7,7 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
-import { formInput, AppButton, FormHeader, GenericError, FormCard } from './form-components'
+import { formInput, AppButton, FormHeader, GenericError, FormCard, ContainerRow } from './form-components'
 
 const validate = ({email, password}) => ({
   email: !email || !isEmail(email),
@@ -17,8 +17,8 @@ const validate = ({email, password}) => ({
 const LoginForm = reduxForm({
   form: 'login',
   validate
-})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, from}) => {
-  return (
+})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, from}) => (
+  <ContainerRow>
     <FormCard>
       <form name='form' onSubmit={ handleSubmit }>
         <FormHeader submitSucceeded={submitSucceeded} icon='person'>Login</FormHeader>
@@ -92,8 +92,8 @@ const LoginForm = reduxForm({
         </div>
       </form>
     </FormCard>
-  )
-})
+  </ContainerRow>
+))
 
 export const AccountNotFoundError = () => (
   <div>

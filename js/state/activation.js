@@ -10,7 +10,7 @@ export const error = (problem) => ({
   problem
 })
 
-const auth = (state = {activated: false, problem: undefined}, action) => {
+const activation = (state = {activated: false, problem: undefined}, action) => {
   switch (action.type) {
     case ACTIVATION_FAILED:
       return {
@@ -26,4 +26,4 @@ const auth = (state = {activated: false, problem: undefined}, action) => {
   }
 }
 
-export default auth
+export default activation

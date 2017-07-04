@@ -1,26 +1,24 @@
 import React from 'react'
 import classNames from 'classnames'
 
-export const formInput = ({input, id, label, tabIndex, autoFocus, required, disabled, type, meta: {dirty, error}, children}) => {
-  return (
-    <fieldset className={classNames({'form-group': true, 'has-success': dirty && !error, 'has-danger': dirty && error})}>
-      <label htmlFor={id}>{label}</label>
-      <input {...input}
-             type={type}
-             tabIndex={tabIndex}
-             required={required}
-             disabled={disabled}
-             autoFocus={autoFocus}
-             className={classNames({
-               'form-control': true,
-               'form-control-success': dirty && !error,
-               'form-control-danger': dirty && error
-             })}
-      />
-      {children}
-    </fieldset>
-  )
-}
+export const formInput = ({input, id, label, tabIndex, autoFocus, required, disabled, type, meta: {dirty, error}, children}) => (
+  <fieldset className={classNames({'form-group': true, 'has-success': dirty && !error, 'has-danger': dirty && error})}>
+    <label htmlFor={id}>{label}</label>
+    <input {...input}
+      type={type}
+      tabIndex={tabIndex}
+      required={required}
+      disabled={disabled}
+      autoFocus={autoFocus}
+      className={classNames({
+        'form-control': true,
+        'form-control-success': dirty && !error,
+        'form-control-danger': dirty && error
+      })}
+    />
+    {children}
+  </fieldset>
+)
 
 export const FormHeader = ({submitSucceeded, icon, children}) => (
   <div className='card-header'>
@@ -68,11 +66,18 @@ export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, chi
   )
 }
 
-export const FormCard = ({children, type = 'single'}) => {
-  const single = type === 'single'
-  const half = type === 'half'
+export const ContainerRow = ({children}) => (
+  <div className='container'>
+    <article className='row'>
+      {children}
+    </article>
+  </div>
+)
+
+export const FormCard = ({children, half}) => {
+  const single = !half
   const classes = {
-    'col-12': single || half,
+    'col-12': true,
     'col-md-8': single,
     'offset-md-2': single,
     'col-lg-6': single,
@@ -80,14 +85,10 @@ export const FormCard = ({children, type = 'single'}) => {
     'col-md-6': half
   }
   return (
-    <div className='container'>
-      <article className='row'>
-        <section className={classNames(classes)}>
-          <div className='card'>
-            {children}
-          </div>
-        </section>
-      </article>
-    </div>
+    <section className={classNames(classes)}>
+      <div className='card'>
+        {children}
+      </div>
+    </section>
   )
 }

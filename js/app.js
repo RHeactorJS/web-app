@@ -13,6 +13,7 @@ import Registration from './container/Registration'
 import Activation from './container/Activation'
 import PasswordChange from './container/PasswordChange'
 import PasswordChangeConfirm from './container/PasswordChangeConfirm'
+import AccountEmailChangeConfirm from './container/AccountEmailChangeConfirm'
 import AccountProfile from './container/AccountProfile'
 import { LoadUserDataFromClientStorage, ClientStoragePropertyToken, ClientStoragePropertyUser } from './container/ClientStorage'
 import Home from './container/Home'
@@ -21,7 +22,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import reducer, { updateStatus, setConfig, doneLoading } from './state'
+import reducer from './state'
+import { setConfig } from './state/config'
+import { updateStatus } from './state/status'
+import { doneLoading } from './state/loading'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Status as StatusModel } from '@rheactorjs/models'
 
@@ -77,6 +81,7 @@ ReactDOM.render(
         <Route exact path='/password-change' component={PasswordChange} />
         <Route exact path='/password-change-confirm' component={PasswordChangeConfirm} />
         <Route exact path='/account/profile' component={AccountProfile} />
+        <Route exact path='/account/email-change' component={AccountEmailChangeConfirm} />
         <LoadUserDataFromClientStorage />
         <ClientStoragePropertyToken name='token' equals={(t1, t2) => t1.token === t2.token} />
         <ClientStoragePropertyUser name='user' equals={(u1, u2) => u1.$id.toString() === u2.$id.toString() && u1.$version === u2.$version} />

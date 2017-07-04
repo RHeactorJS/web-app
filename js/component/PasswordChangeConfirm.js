@@ -9,7 +9,7 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
-import { formInput, AppButton, FormHeader, GenericError, FormCard } from './form-components'
+import { formInput, AppButton, FormHeader, GenericError, FormCard, ContainerRow } from './form-components'
 import { AccountNotFoundError } from './Login'
 
 const validate = ({password, password2}) => ({
@@ -20,8 +20,8 @@ const validate = ({password, password2}) => ({
 const PasswordChangeConfirmForm = reduxForm({
   form: 'passwordChangeConfirm',
   validate
-})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => {
-  return (
+})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => (
+  <ContainerRow>
     <FormCard>
       <form name='form' onSubmit={ handleSubmit }>
         <FormHeader submitSucceeded={submitSucceeded} icon='settings_backup_restore'>Pick a new password</FormHeader>
@@ -72,8 +72,8 @@ const PasswordChangeConfirmForm = reduxForm({
         )}
       </form>
     </FormCard>
-  )
-})
+  </ContainerRow>
+))
 
 class PasswordChangeConfirmScreen extends React.Component {
   constructor (props) {

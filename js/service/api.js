@@ -1,6 +1,6 @@
 /* global fetch URL */
 
-import { H, accept } from '../util/headers'
+import { H } from '../util/headers'
 import { httpProblemfromFetchResponse, httpProblemfromException } from '../util/http-problem'
 import { URIValueType, URIValue } from '@rheactorjs/value-objects'
 import { String as StringType, Function as FunctionType, irreducible, maybe, Object as ObjectType } from 'tcomb'

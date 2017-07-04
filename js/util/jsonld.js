@@ -6,7 +6,7 @@ import {ModelType} from '@rheactorjs/models'
 /**
  * @param {Function} filterFunc
  * @param {Model} model to fetch the relation from
- * @returns {Promise.<String>}
+ * @returns {URIValue}
  */
 const getLink = (filterFunc, model) => {
   FunctionType(filterFunc, ['JSONLD.getLink', 'filterFunc:Function'])
@@ -27,7 +27,7 @@ const getLink = (filterFunc, model) => {
  * Find the link for the given relation
  * @param {String} relation
  * @param {Model} model Optional model, to fetch the relation from
- * @returns {Promise.<String>}
+ * @returns {URIValue}
  */
 const getRelLink = (relation, model) => {
   StringType(relation, ['JSONLD.getRelLink', 'relation:String'])
@@ -45,7 +45,7 @@ const getRelLink = (relation, model) => {
 /**
  * @param {URIValue} context
  * @param {Model} model Optional model, to fetch the relation from
- * @returns {Promise.<String>}
+ * @returns {URIValue}
  */
 const getListLink = (context, model) => {
   URIValueType(context, ['JSONLD.getListLink', 'context:URIValue'])

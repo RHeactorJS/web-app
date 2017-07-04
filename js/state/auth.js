@@ -1,3 +1,4 @@
+import { EMAIL_CHANGE_SUCCEEDED } from './accountEmailChangeConfirm'
 const AUTHENTICATE = 'AUTHENTICATE'
 const TOKEN = 'TOKEN'
 const USER = 'USER'
@@ -48,8 +49,10 @@ const auth = (state = {token: false, user: false, autologinComplete: false, auto
       return {...state, user: action.user}
     case AUTOLOGIN_COMPLETE:
       return {...state, autologinComplete: true, autologinError: state.error}
-    case USER_UPDATED: // FIXME: Use Immutable user model
-      return {...state, user: {...state.user, [action.property]: action.value, $version: state.user.$version + 1}}
+    case USER_UPDATED:
+      return {...state, user: state.user.updated({[action.property]: action.value})}
+    case EMAIL_CHANGE_SUCCEEDED:
+      return {...state, user: state.user.updated({email: action.email})}
     default:
       return state
   }

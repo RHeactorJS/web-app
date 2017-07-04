@@ -1,10 +1,8 @@
 /* global window */
 
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
-import { HttpProblem, JsonWebToken, User } from '@rheactorjs/models'
-import { URIValue } from '@rheactorjs/value-objects'
-import { EntryNotFoundError, TokenExpiredError, ReanimationFailedError } from '@rheactorjs/errors'
+import { JsonWebToken, User } from '@rheactorjs/models'
+import { EntryNotFoundError, ReanimationFailedError, TokenExpiredError } from '@rheactorjs/errors'
 import Promise from 'bluebird'
 
 export class LoadUserDataFromClientStorage extends React.Component {
@@ -18,7 +16,6 @@ export class LoadUserDataFromClientStorage extends React.Component {
   }
 
   componentWillMount () {
-    const autoLoginComplete =
     this.getValidToken()
       .then(token => this.onToken(token))
       .then(() => this.userStorage.get().then(user => this.onUser(User.fromJSON(user))))

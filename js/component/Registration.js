@@ -7,21 +7,21 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
-import { formInput, AppButton, FormHeader, GenericError, FormCard } from './form-components'
+import { formInput, AppButton, FormHeader, GenericError, FormCard, ContainerRow } from './form-components'
 
 const validate = ({email, password, password2, firstname, lastname}) => ({
   email: !email || !isEmail(email),
   password: !password || password.length < 8,
   password2: password2 !== password,
-  firstname: !firstname || !firstname.length,
-  lastname: !lastname || !lastname.length
+  firstname: !firstname || firstname.length < 1,
+  lastname: !lastname || lastname.length < 1
 })
 
 const RegistrationForm = reduxForm({
   form: 'registration',
   validate
-})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => {
-  return (
+})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => (
+  <ContainerRow>
     <FormCard>
       <form name='form' className='card' onSubmit={ handleSubmit }>
         <FormHeader submitSucceeded={submitSucceeded} icon='person_add'>Registration</FormHeader>
@@ -112,8 +112,8 @@ const RegistrationForm = reduxForm({
         )}
       </form>
     </FormCard>
-  )
-})
+  </ContainerRow>
+))
 
 class RegistrationScreen extends React.Component {
   constructor (props) {
