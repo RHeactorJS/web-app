@@ -33,15 +33,19 @@ export const FormHeader = ({submitSucceeded, icon, children}) => (
   </div>
 )
 
-export const GenericError = ({problem}) => (
-  <div className='alert alert-danger' role='alert'>
-    <i className='material-icons'>error</i>
-    {problem.title}<br />
-    <small>{problem.detail}</small>
-  </div>
-)
+export const GenericError = ({problem}) => {
+  const title = problem.title || problem.message
+  return (
+    <div className='alert alert-danger' role='alert'>
+      <i className='material-icons'>error</i>
+      {title}
+      {problem.detail && <br />}
+      {problem.detail && <small>{problem.detail}</small>}
+    </div>
+  )
+}
 
-export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, children}) => {
+export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, children, onClick}) => {
   const buttonIconClass = classNames({'material-icons': true, spin: submitting})
   let buttonIconSymbol
   if (!valid) {
@@ -58,6 +62,7 @@ export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, chi
   const disabled = !valid || submitting
   const attrs = {}
   if (disabled) attrs.disabled = true
+  if (onClick) attrs.onClick = onClick
   return (
     <button type='submit' className='btn btn-primary' {...attrs}>
       <i className={buttonIconClass}>{buttonIconSymbol}</i>

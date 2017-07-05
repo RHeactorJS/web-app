@@ -9,7 +9,6 @@ import { Index, Status, MaybeJsonWebTokenType, MaybeVersionNumberType } from '@r
 import Promise from 'bluebird'
 
 const MaybeObjectType = maybe(ObjectType)
-let indexPromise
 
 const modelFetch = (method, mimeType, model, uri, token, data, version) => {
   StringType(mimeType, ['modelFetch()', 'mimeType:String'])
@@ -76,17 +75,17 @@ export class API {
   }
 
   index () {
-    if (!indexPromise) {
-      indexPromise = new Promise((resolve, reject) => {
+    if (!this.indexPromise) {
+      this.indexPromise = new Promise((resolve, reject) => {
         this.modelGet(Index, this.apiIndex, undefined, {t: Date.now()})
           .then(resolve)
           .catch(err => {
             reject(err)
-            indexPromise = false
+            this.indexPromise = false
           })
       })
     }
-    return indexPromise
+    return this.indexPromise
   }
 
   /**

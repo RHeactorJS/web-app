@@ -53,10 +53,10 @@ export default ({user, token, appName, connected}) => {
                   <i className='material-icons'>face</i>
                   <span>Change profile</span>
                 </Link>
-                <a className='dropdown-item' href='#'>
+                <Link to='/account/avatar' className='dropdown-item'>
                   <i className='material-icons'>photo</i>
                   <span>Change avatar</span>
-                </a>
+                </Link>
               </div>
             </li>
           )}

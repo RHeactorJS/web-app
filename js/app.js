@@ -15,6 +15,7 @@ import PasswordChange from './container/PasswordChange'
 import PasswordChangeConfirm from './container/PasswordChangeConfirm'
 import AccountEmailChangeConfirm from './container/AccountEmailChangeConfirm'
 import AccountProfile from './container/AccountProfile'
+import AccountAvatar from './container/AccountAvatar'
 import { LoadUserDataFromClientStorage, ClientStoragePropertyToken, ClientStoragePropertyUser } from './container/ClientStorage'
 import Home from './container/Home'
 import AppUpdate from './container/AppUpdate'
@@ -34,6 +35,7 @@ const store = createStore(reducer)
 const config = {
   ...window.RHeactorJsAppConfig,
   apiIndex: new URIValue(window.RHeactorJsAppConfig.apiIndex),
+  imageService: new URIValue(window.RHeactorJsAppConfig.imageService),
   buildTime: new Date(+window.RHeactorJsAppConfig.buildTime)
 }
 store.dispatch(setConfig(config))
@@ -82,6 +84,7 @@ ReactDOM.render(
         <Route exact path='/password-change-confirm' component={PasswordChangeConfirm} />
         <Route exact path='/account/profile' component={AccountProfile} />
         <Route exact path='/account/email-change' component={AccountEmailChangeConfirm} />
+        <Route exact path='/account/avatar' component={AccountAvatar} />
         <LoadUserDataFromClientStorage />
         <ClientStoragePropertyToken name='token' equals={(t1, t2) => t1.token === t2.token} />
         <ClientStoragePropertyUser name='user' equals={(u1, u2) => u1.$id.toString() === u2.$id.toString() && u1.$version === u2.$version} />
