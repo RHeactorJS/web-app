@@ -90,3 +90,9 @@ abbr[title].material-icons {
   text-decoration: none;
   border-bottom: none;
 }
+
+.dropdown-item {
+  .material-icons {
+    margin-left: -1rem;
+  }
+}
