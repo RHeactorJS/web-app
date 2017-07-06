@@ -1,8 +1,8 @@
 .PHONY: help clean development
 
-build/%.html: assets/%.html includes/*.html test/config.json
+build/%.html: assets/%.html includes/*.html build/config.json
 	mkdir -p $(dir $@)
-	./node_modules/.bin/rheactorjs-build-views build test/config.json -i ./includes/ $< $@
+	./node_modules/.bin/rheactorjs-build-views build build/config.json -i ./includes/ $< $@
 
 build: build/index.html build/app.min.js build/styles.min.css build/jquery.min.js build/bootstrap.min.js build/tether.min.js
 
@@ -49,6 +49,11 @@ ifeq ($(ENVIRONMENT),development)
 else
 	./node_modules/.bin/uglifycss $< > $@
 endif
+
+# Config
+
+build/config.json: test/config.js
+	./node_modules/.bin/babel-node $< > $@
 
 # Helpers
 

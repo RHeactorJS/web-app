@@ -9,7 +9,7 @@ export class H {
    */
   accept = (mimeType) => {
     this.headers.append('Accept', mimeType)
-    this.headers.append('Content-Type', `${mimeType}; charset=utf-8'`)
+    this.headers.append('Content-Type', `${mimeType}; charset=utf-8`)
     return this
   }
 

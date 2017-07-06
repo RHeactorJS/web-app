@@ -2,18 +2,17 @@
 
 import React from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import { Field, reduxForm, SubmissionError } from 'redux-form'
-import { isEmail } from '../util/is-email'
 import { HttpProblem, JsonWebToken, User } from '@rheactorjs/models'
-import { URIValue, EmailValue } from '@rheactorjs/value-objects'
+import { EmailValue, URIValue } from '@rheactorjs/value-objects'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
-import { formInput, AppButton, FormHeader, GenericError, FormCard, ContainerRow } from './form-components'
+import { AppButton, ContainerRow, FormCard, FormHeader, GenericError } from './form-components'
 import { Progress } from './Progress'
 import { ValidationFailedError } from '@rheactorjs/errors'
 import Promise from 'bluebird'
 
+const imageServiceContext = new URIValue('https://github.com/RHeactorJS/image-service#Upload')
 export default class AccountAvatarScreen extends React.Component {
   constructor (props) {
     super(props)
@@ -24,41 +23,65 @@ export default class AccountAvatarScreen extends React.Component {
     this.onUserUpdate = props.onUserUpdate
     this.onError = props.onError
     this.onUpload = props.onUpload
+    this.onSuccess = props.onSuccess
     this.apiClient = new API(props.apiIndex, props.mimeType)
     this.userClient = new GenericModelAPIClient(this.apiClient, User)
     this.tokenClient = new GenericModelAPIClient(this.apiClient, JsonWebToken)
-    this.imageService = new API(props.imageService, 'application/vnd.rheactorjs.image-service.v1+json')
+    this.imageService = new API(props.imageServiceIndex, 'application/vnd.rheactorjs.image-service.v1+json')
     this.imageServiceClient = new GenericModelAPIClient(
       this.imageService,
-      {$context: new URIValue('https://github.com/RHeactorJS/image-service#Upload'), fromJSON: () => {}}
+      {$context: imageServiceContext, fromJSON: ({url}) => new URIValue(url)}
     )
   }
 
-  componentWillReceiveProps ({autologinComplete, user, token, error, file, data}) {
+  componentWillReceiveProps ({autologinComplete, user, token, uploadedURI, error, file, data}) {
+    this.uploadedURI = uploadedURI
     this.error = error
     this.file = file
     this.data = data
+    this.autologinComplete = autologinComplete
+    this.user = user
+    this.token = token
     if (autologinComplete) {
-      this.autologinComplete = autologinComplete
-      this.user = user
-      this.token = token
+      if (file && data) this.upload()
+      if (uploadedURI) this.updateUser()
     }
-    if (file) {
+  }
+
+  updateUser = () => {
+    if (this.uploadedURI === this.updatingUser) return
+    this.updatingUser = this.uploadedURI
+    this.userClient.update(JSONLD.getRelLink('update-avatar', this.user), {value: this.uploadedURI.toString()}, this.user.$version, this.token)
+      .then(() => this.onUserUpdate('avatar', this.uploadedURI.toString()))
+      .catch(err => this.onError(err))
+  }
+
+  upload = () => {
+    if (!this.uploading) {
+      this.uploading = true
       // Upload it
       Promise
         .join(
           this.apiClient.index().then(index => this.tokenClient.create(JSONLD.getRelLink('create-token', index), {aud: 'image-service'}, this.token)),
-          this.imageService.index()
+          this.imageService.index().then(index => index.$links.filter(l => l.subject.equals(imageServiceContext))).spread(({href}) => href)
         )
-        .spread((token, index) => {
-          console.log(index)
+        .spread((token, uploadUri) => {
+          return this.imageServiceClient.create(uploadUri, {$context: imageServiceContext, image: btoa(this.data), mimeType: this.file.type}, token)
         })
-
+        .then(avatarURI => {
+          this.uploading = false
+          this.onSuccess(avatarURI, this.user)
+          return avatarURI
+        })
+        .catch(err => {
+          this.uploading = false
+          this.onError(err)
+        })
     }
   }
 
   progress = () => {
-    return this.file ? 1 : false
+    return this.file ? 50 : false
   }
 
   filename = () => {
@@ -68,14 +91,14 @@ export default class AccountAvatarScreen extends React.Component {
   render () {
     if (!this.autologinComplete) return null
     return this.user
-      ? <AccountAvatarForm onFileSelected={this.onFileSelected} error={this.error} progress={this.progress()} filename={this.filename()} />
+      ? <AccountAvatarForm onFileSelected={this.onFileSelected} error={this.error} progress={this.progress()} filename={this.filename()} avatar={this.user && this.user.avatar} label={this.user && this.user.name}/>
       : <Redirect to={{pathname: '/login', returnTo: this.pathname}}/>
   }
 
   onFileSelected = (e) => {
     const file = e.target.files[0]
     if (!file) return this.onError(new ValidationFailedError('No file selected!'))
-    const {name, size, type} = file
+    const {size, type} = file
     if (!size) return this.onError(new ValidationFailedError('Empty file selected!'))
     if (size > 10 * 1024 * 1024) return this.onError(new ValidationFailedError(`File size (${size}) is too large!`))
     if (!['image/png', 'image/jpeg'].includes(type)) return this.onError(new ValidationFailedError(`File type (${type}) not supported!`))
@@ -91,7 +114,6 @@ export default class AccountAvatarScreen extends React.Component {
 class AccountAvatarForm extends React.Component {
   constructor (props) {
     super(props)
-    this.submitSucceeded = props.submitSucceeded
     this.avatar = props.avatar
     this.label = props.label
     this.result = props.result
@@ -99,10 +121,11 @@ class AccountAvatarForm extends React.Component {
     this.onFileSelected = props.onFileSelected
   }
 
-  componentWillReceiveProps ({error, progress, filename}) {
+  componentWillReceiveProps ({error, progress, filename, avatar}) {
     this.error = error
     this.progress = progress
     this.filename = filename
+    this.avatar = avatar
   }
 
   onButtonClicked = () => {
@@ -113,16 +136,11 @@ class AccountAvatarForm extends React.Component {
     return (
       <ContainerRow>
         <FormCard>
-          <FormHeader icon='portrait' submitSucceeded={this.submitSucceeded}>Change Avatar</FormHeader>
+          <FormHeader icon='portrait'>Change Avatar</FormHeader>
           <div className='card-block'>
-            { this.submitSucceeded && (
-              <div className='alert alert-success' role='alert'>
-                Awesome, the avatar has been updated …
-              </div>
-            )}
             { this.avatar && (
               <div className='avatar-preview'>
-                <img data-ng-src={this.avatar} alt={this.label}/><br />
+                <img src={this.avatar} alt={this.label}/><br />
                 {this.label}<br />
                 <hr />
               </div>
@@ -145,8 +163,7 @@ class AccountAvatarForm extends React.Component {
             <input type='file' id='file' style={{display: 'none'}} ref='uploadFile' onChange={this.onFileSelected}/>
             <div className='controls'>
               <AppButton submitting={this.progress} valid submitFailed={this.submitFailed}
-                         onClick={this.onButtonClicked}
-                         submitSucceeded={this.submitSucceeded}>Change avatar …</AppButton>
+                         onClick={this.onButtonClicked}>Change avatar …</AppButton>
             </div>
             { this.error && <GenericError problem={this.error}/> }
           </div>

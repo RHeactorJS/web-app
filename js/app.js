@@ -35,7 +35,7 @@ const store = createStore(reducer)
 const config = {
   ...window.RHeactorJsAppConfig,
   apiIndex: new URIValue(window.RHeactorJsAppConfig.apiIndex),
-  imageService: new URIValue(window.RHeactorJsAppConfig.imageService),
+  imageServiceIndex: new URIValue(window.RHeactorJsAppConfig.imageServiceIndex),
   buildTime: new Date(+window.RHeactorJsAppConfig.buildTime)
 }
 store.dispatch(setConfig(config))
