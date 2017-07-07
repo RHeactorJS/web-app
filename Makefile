@@ -52,7 +52,8 @@ endif
 
 # Config
 
-build/config.json: test/config.js
+build/config.json: scripts/config.js
+	@mkdir -p $(dir $@)
 	./node_modules/.bin/babel-node $< > $@
 
 # Helpers
