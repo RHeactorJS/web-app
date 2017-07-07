@@ -2,6 +2,8 @@ import { EMAIL_CHANGE_SUCCEEDED } from './accountEmailChangeConfirm'
 const AUTHENTICATE = 'AUTHENTICATE'
 const TOKEN = 'TOKEN'
 const USER = 'USER'
+export const LOGIN = 'LOGIN'
+const LOGIN_FAILED = 'LOGIN_FAILED'
 const LOGOUT = 'LOGOUT'
 const AUTOLOGIN_COMPLETE = 'AUTOLOGIN_COMPLETE'
 const USER_UPDATED = 'USER_UPDATED'
@@ -37,8 +39,23 @@ export const userUpdated = (property, value) => ({
   value
 })
 
-const auth = (state = {token: false, user: false, autologinComplete: false, autologinError: undefined}, action) => {
+export const login = (email, password) => ({
+  type: LOGIN,
+  email,
+  password
+})
+
+export const loginFailed = error => ({
+  type: LOGIN_FAILED,
+  error
+})
+
+const auth = (state = {token: false, user: false, autologinComplete: false, autologinError: false, error: false}, action) => {
   switch (action.type) {
+    case LOGIN:
+      return {...state, error: false}
+    case LOGIN_FAILED:
+      return {...state, error: action.error}
     case AUTHENTICATE:
       return {...state, token: action.token, user: action.user}
     case LOGOUT:

@@ -80,8 +80,8 @@ export class API {
         this.modelGet(Index, this.apiIndex, undefined, {t: Date.now()})
           .then(resolve)
           .catch(err => {
-            reject(err)
             this.indexPromise = false
+            reject(err)
           })
       })
     }

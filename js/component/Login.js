@@ -2,12 +2,41 @@ import React from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { Field, reduxForm, SubmissionError } from 'redux-form'
 import { isEmail } from '../util/is-email'
-import { HttpProblem, JsonWebToken, User } from '@rheactorjs/models'
-import { URIValue } from '@rheactorjs/value-objects'
-import { GenericModelAPIClient } from '../service/generic-api-client'
-import { JSONLD } from '../util/jsonld'
-import { API } from '../service/api'
 import { formInput, AppButton, FormHeader, GenericError, FormCard, ContainerRow } from './form-components'
+import { login } from '../state/auth'
+
+export default class LoginScreen extends React.Component {
+  constructor (props) {
+    super(props)
+    this.from = props.location.state && props.location.state.from
+    this.returnTo = props.location.returnTo || '/'
+  }
+
+  componentWillReceiveProps ({token, error}) {
+    if (token) {
+      this.token = token
+      this.submitPromise.resolve()
+    }
+    if (error) {
+      this.error = error
+      this.submitPromise.reject(new SubmissionError({_error: error}))
+    }
+  }
+
+  submit = ({email, password}) => {
+    this.from = false
+    this.props.dispatch(login(email, password))
+    return new Promise((resolve, reject) => {
+      this.submitPromise = {resolve, reject}
+    })
+  }
+
+  render () {
+    return this.token
+      ? <Redirect to={{pathname: this.returnTo}}/>
+      : <LoginForm onSubmit={this.submit} from={this.from}/>
+  }
+}
 
 const validate = ({email, password}) => ({
   email: !email || !isEmail(email),
@@ -129,39 +158,3 @@ const AccessDeniedError = () => (
     </div>
   </div>
 )
-
-class LoginScreen extends React.Component {
-  constructor (props) {
-    super(props)
-    this.apiClient = new API(props.apiIndex, props.mimeType)
-    this.onLogin = props.onLogin
-    this.from = props.location.state && props.location.state.from
-    this.returnTo = props.location.returnTo || '/'
-    this.token = props.token
-  }
-
-  componentWillReceiveProps ({token}) {
-    this.token = token
-  }
-
-  submit = ({email, password}) => {
-    this.from = false
-    const tokenClient = new GenericModelAPIClient(this.apiClient, JsonWebToken)
-    const userClient = new GenericModelAPIClient(this.apiClient, User)
-    return this.apiClient.index()
-      .then(index => JSONLD.getRelLink('login', index))
-      .then(uri => tokenClient.create(uri, {email, password}))
-      .then(token => userClient.get(new URIValue(token.sub), token).then(user => this.onLogin(token, user)))
-      .catch(err => {
-        throw new SubmissionError({_error: err})
-      })
-  }
-
-  render () {
-    return this.token
-      ? <Redirect to={{pathname: this.returnTo}}/>
-      : <LoginForm onSubmit={this.submit} from={this.from}/>
-  }
-}
-
-export default LoginScreen

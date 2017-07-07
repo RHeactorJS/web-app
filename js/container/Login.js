@@ -1,15 +1,11 @@
 import { connect } from 'react-redux'
 import Login from '../component/Login'
-import { authenticate } from '../state/auth'
 
-const mapStateToProps = ({config: {apiIndex, mimeType}, auth: {token}}) => ({
+const mapStateToProps = ({config: {apiIndex, mimeType}, auth: {token, error}}) => ({
   apiIndex,
   mimeType,
-  token
+  token,
+  error
 })
 
-const mapDispatchToProps = ({
-  onLogin: authenticate
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps)(Login)

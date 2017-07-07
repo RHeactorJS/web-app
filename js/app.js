@@ -21,7 +21,7 @@ import Home from './container/Home'
 import AppUpdate from './container/AppUpdate'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './state'
 import { setConfig } from './state/config'
@@ -29,33 +29,29 @@ import { updateStatus } from './state/status'
 import { doneLoading } from './state/loading'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Status as StatusModel } from '@rheactorjs/models'
+import LoginMiddleware from './middleware/Login'
 
-const store = createStore(reducer)
-
+// Get global configuration from index.html
 const config = {
   ...window.RHeactorJsAppConfig,
   apiIndex: new URIValue(window.RHeactorJsAppConfig.apiIndex),
   imageServiceIndex: new URIValue(window.RHeactorJsAppConfig.imageServiceIndex),
   buildTime: new Date(+window.RHeactorJsAppConfig.buildTime)
 }
-store.dispatch(setConfig(config))
-const statusEl = document.getElementById('react-status')
-if (statusEl) {
-  const api = new API(config.apiIndex, config.mimeType)
-  ReactDOM.render(
-    <Provider store={store}>
-      <Status />
-    </Provider>,
-    statusEl
-  )
-  // Fetch status once and every minute
-  const fetchStatus = () => api.status()
-    .then(status => store.dispatch(updateStatus(status)))
-    .catch(() => store.dispatch(updateStatus(new StatusModel('error', new Date(), config.version))))
-  window.setInterval(fetchStatus, 1000 * 60)
-  fetchStatus()
-}
 
+// Init services
+const apiClient = new API(config.apiIndex, config.mimeType)
+
+// Init redux store
+const store = createStore(
+  reducer,
+  applyMiddleware(LoginMiddleware(apiClient))
+)
+
+// Make config available
+store.dispatch(setConfig(config))
+
+// SHow loading indicator
 ReactDOM.render(
   <Provider store={store}>
     <Loading />
@@ -63,13 +59,7 @@ ReactDOM.render(
   document.getElementById('app-loading')
 )
 
-ReactDOM.render(
-  <Provider store={store}>
-    <AppUpdate />
-  </Provider>,
-  document.getElementById('app-update')
-)
-
+// The main app
 ReactDOM.render(
   <Provider store={store}>
     <Router>
@@ -94,6 +84,33 @@ ReactDOM.render(
   document.getElementById('main')
 )
 
+// Check backend status
+const statusEl = document.getElementById('react-status')
+if (statusEl) {
+  const api = new API(config.apiIndex, config.mimeType)
+  ReactDOM.render(
+    <Provider store={store}>
+      <Status />
+    </Provider>,
+    statusEl
+  )
+  // Fetch status once and every minute
+  const fetchStatus = () => api.status()
+    .then(status => store.dispatch(updateStatus(status)))
+    .catch(() => store.dispatch(updateStatus(new StatusModel('error', new Date(), config.version))))
+  window.setInterval(fetchStatus, 1000 * 60)
+  fetchStatus()
+}
+
+// Check if app needs update
+ReactDOM.render(
+  <Provider store={store}>
+    <AppUpdate />
+  </Provider>,
+  document.getElementById('app-update')
+)
+
+// Notify loading indicator that we are done
 store.dispatch(doneLoading())
 
 loadFont('//fonts.googleapis.com/css?family=Fira+Sans:400,300', 'webfont-loaded')
