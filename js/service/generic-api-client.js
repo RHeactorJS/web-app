@@ -1,8 +1,6 @@
-import Promise from 'bluebird'
-import { JSONLD } from '../util/jsonld'
-import { MaybeURIValueType, URIValueType } from '@rheactorjs/value-objects'
-import { JsonWebTokenType, ListType, MaybeJsonWebTokenType, VersionNumberType } from '@rheactorjs/models'
-import { Boolean as BooleanType, Object as ObjectType, String as StringType } from 'tcomb'
+import { URIValueType } from '@rheactorjs/value-objects'
+import { JsonWebTokenType, MaybeJsonWebTokenType, VersionNumberType } from '@rheactorjs/models'
+import { Boolean as BooleanType, Object as ObjectType } from 'tcomb'
 import { APIType } from './api'
 
 export class GenericModelAPIClient {
@@ -36,32 +34,6 @@ export class GenericModelAPIClient {
 
   /**
    * @param {URIValue} endpoint
-   * @param {object} query
-   * @param {JsonWebToken} token
-   * @returns {Promise.<Model|null>}
-   */
-  query (endpoint, query, token) {
-    URIValueType(endpoint, ['GenericModelAPIClient.query', 'endpoint:URIValue'])
-    MaybeJsonWebTokenType(token, ['GenericModelAPIClient.query', 'token:?JsonWebToken'])
-    let config = accept(this.api.mimeType)
-    if (token) {
-      config.headers = Object.assign(config.headers, auth(token).headers)
-    }
-    return this.$http.post(endpoint.toString(), query, config)
-      .then(response => handleErrorResponses(response))
-      .then(response => {
-        if (!response.data) return null
-        const model = this.api.createModelInstance(response.data)
-        this.validateModelContext(model)
-        return model
-      })
-      .catch(err => err.status, httpError => {
-        throw httpProblemfromFetchError(httpError, 'Query to ' + endpoint + ' failed!')
-      })
-  }
-
-  /**
-   * @param {URIValue} endpoint
    * @param {JsonWebToken} token
    * @returns {Promise.<Model>}
    */
@@ -69,64 +41,6 @@ export class GenericModelAPIClient {
     URIValueType(endpoint, ['GenericModelAPIClient.get', 'endpoint:URIValue'])
     MaybeJsonWebTokenType(token, ['GenericModelAPIClient.get', 'token:?JsonWebToken'])
     return this.apiGet(endpoint, token)
-  }
-
-  /**
-   * Fetch a list of items from the endpoint
-   *
-   * @param {URIValue} endpoint
-   * @param {Object} query
-   * @param {JsonWebToken} token
-   * @param {String} expectedContext
-   * @returns {Promise.<Model>}
-   */
-  list (endpoint, query, token, expectedContext) {
-    URIValueType(endpoint, ['GenericModelAPIClient.list', 'endpoint:URIValue'])
-    MaybeJsonWebTokenType(token, ['GenericModelAPIClient.get', 'token:?JsonWebToken'])
-    MaybeURIValueType(expectedContext, ['GenericModelAPIClient.list', 'expectedContext:?URIValue'])
-    expectedContext = expectedContext || this.modelContext
-    let config = accept(this.api.mimeType)
-    if (token) {
-      config.headers = Object.assign(config.headers, auth(token).headers)
-    }
-    return this.$http.post(endpoint.toString(), query, config)
-      .then(response => handleErrorResponses(response))
-      .then(response => {
-        if (response.data) {
-          let model = this.api.createModelInstance(response.data)
-          if (expectedContext) {
-            return Promise
-              .map(model.items, (model) => {
-                this.validateModelContext(model, expectedContext)
-              })
-              .then(() => {
-                return model
-              })
-          } else {
-            return model
-          }
-        }
-        return null
-      })
-      .catch(err => err.status, err => {
-        throw httpProblemfromFetchError(err, 'Fetching of ' + endpoint + ' failed!')
-      })
-  }
-
-  /**
-   * Follow the links in a list
-   *
-   * @param {List} list
-   * @param {String} dir
-   * @param {JsonWebToken} token
-   * @return {Promise.<appButton>}
-   */
-  navigateList (list, dir, token) {
-    ListType(list, ['GenericModelAPIClient.navigateList', 'list:List'])
-    StringType(dir, ['GenericModelAPIClient.navigateList', 'dir:String'])
-    MaybeJsonWebTokenType(token, ['GenericModelAPIClient.navigateList', 'token:?JsonWebToken'])
-    return this.list(JSONLD.getRelLink(dir, list), {}, token)
-      .then(response => handleErrorResponses(response))
   }
 
   /**
@@ -143,27 +57,5 @@ export class GenericModelAPIClient {
     VersionNumberType(version, ['GenericModelAPIClient.update', 'version:VersionNumber'])
     JsonWebTokenType(token, ['GenericModelAPIClient.update', 'token:JsonWebToken'])
     return this.apiPut(endpoint, token, data, version)
-  }
-
-  /**
-   * Delete a resource
-   *
-   * @param {URIValue} endpoint
-   * @param {Number} version
-   * @param {JsonWebToken} token
-   * @returns {Promise.<Model>}
-   */
-  delete (endpoint, version, token) {
-    URIValueType(endpoint, ['GenericModelAPIClient.delete', 'endpoint:URIValue'])
-    VersionNumberType(version, ['GenericModelAPIClient.delete', 'version:VersionNumber'])
-    JsonWebTokenType(token, ['GenericModelAPIClient.delete', 'token:JsonWebToken'])
-    const config = {
-      headers: Object.assign(accept(this.api.mimeType).headers, ifMatch(version).headers, auth(token).headers)
-    }
-    return this.$http.delete(endpoint.toString(), config)
-      .then(response => handleErrorResponses(response))
-      .catch(err => err.status, err => {
-        throw httpProblemfromFetchError(err, 'Updating of ' + endpoint + ' failed!')
-      })
   }
 }

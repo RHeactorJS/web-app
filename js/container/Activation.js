@@ -1,17 +1,11 @@
 import { connect } from 'react-redux'
 import Activation from '../component/Activation'
-import { success, error } from '../state/activation'
 
-const mapStateToProps = ({config: {apiIndex, mimeType}, activation: {activated, problem}}) => ({
+const mapStateToProps = ({config: {apiIndex, mimeType}, activation: {activated, error}}) => ({
   apiIndex,
   mimeType,
   activated,
-  problem
+  error
 })
 
-const mapDispatchToProps = ({
-  onSuccess: success,
-  onError: error
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Activation)
+export default connect(mapStateToProps)(Activation)

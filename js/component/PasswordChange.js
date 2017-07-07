@@ -1,9 +1,7 @@
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
 import { Field, reduxForm, SubmissionError } from 'redux-form'
 import { isEmail } from '../util/is-email'
-import { HttpProblem, JsonWebToken, User } from '@rheactorjs/models'
-import { URIValue } from '@rheactorjs/value-objects'
+import { User } from '@rheactorjs/models'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
@@ -20,12 +18,12 @@ const PasswordChangeForm = reduxForm({
 })(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => (
   <ContainerRow>
     <FormCard>
-      <form name='form' onSubmit={ handleSubmit }>
+      <form name='form' onSubmit={handleSubmit}>
         <FormHeader submitSucceeded={submitSucceeded} icon='settings_backup_restore'>Reset your
           password</FormHeader>
         { submitSucceeded && (
           <div className='card-block'>
-            <div className="alert alert-success" role="alert">
+            <div className='alert alert-success' role='alert'>
               <p>We've sent you a confirmation link. Please check your email inbox.</p>
             </div>
           </div>
@@ -52,14 +50,14 @@ const PasswordChangeForm = reduxForm({
           <div className='card-footer'>
             <div className='controls'>
               <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
-                         submitSucceeded={submitSucceeded}>Continue</AppButton>
+                submitSucceeded={submitSucceeded}>Continue</AppButton>
             </div>
             { error && (() => {
               switch (error.title) {
                 case 'EntryNotFoundError':
                   return <AccountNotFoundError />
                 default:
-                  return <GenericError problem={error}/>
+                  return <GenericError problem={error} />
               }
             })()}
           </div>
@@ -86,7 +84,7 @@ class PasswordChangeScreen extends React.Component {
   }
 
   render () {
-    return <PasswordChangeForm onSubmit={this.submit}/>
+    return <PasswordChangeForm onSubmit={this.submit} />
   }
 }
 

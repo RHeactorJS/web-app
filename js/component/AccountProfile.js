@@ -1,9 +1,8 @@
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { Field, reduxForm, SubmissionError } from 'redux-form'
 import { isEmail } from '../util/is-email'
-import { HttpProblem, JsonWebToken, User } from '@rheactorjs/models'
-import { URIValue, EmailValue } from '@rheactorjs/value-objects'
+import { User } from '@rheactorjs/models'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
@@ -71,10 +70,10 @@ export default class AccountProfileScreen extends React.Component {
     if (!this.autologinComplete) return null
     return this.user
       ? (<ContainerRow>
-        <AccountProfileForm onBlur={this.updateValue} onSubmit={this.submitProfileForm} user={this.user}/>
-        <AccountEmailForm onSubmit={this.submitEmailForm} user={this.user}/>
+        <AccountProfileForm onBlur={this.updateValue} onSubmit={this.submitProfileForm} user={this.user} />
+        <AccountEmailForm onSubmit={this.submitEmailForm} user={this.user} />
       </ContainerRow>)
-      : <Redirect to={{pathname: '/login', returnTo: this.pathname}}/>
+      : <Redirect to={{pathname: '/login', returnTo: this.pathname}} />
   }
 }
 
@@ -92,11 +91,11 @@ const AccountProfileForm = reduxForm({
   }
   return (
     <FormCard half>
-      <form name='form' onSubmit={ handleSubmit }>
+      <form name='form' onSubmit={handleSubmit}>
         <div className='card-header'>
           <h1 className='card-title'>
             { user.avatar
-              ? <img src={user.avatar} className='avatar' alt={`${user.firstname} ${user.lastname}`}/>
+              ? <img src={user.avatar} className='avatar' alt={`${user.firstname} ${user.lastname}`} />
               : <i className='material-icons'>person</i>
             }
             {user.firstname} {user.lastname}
@@ -135,7 +134,7 @@ const AccountProfileForm = reduxForm({
                 </div>
               </div>
             )}
-            { error && <GenericError problem={error}/> }
+            { error && <GenericError problem={error} /> }
           </div>
         ) }
       </form>
@@ -152,7 +151,7 @@ const AccountEmailForm = reduxForm({
   validate: validateEmailForm
 })(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, user}) => (
   <FormCard half>
-    <form name='form' onSubmit={ handleSubmit }>
+    <form name='form' onSubmit={handleSubmit}>
       <FormHeader submitSucceeded={submitSucceeded} icon='person'>Change email address</FormHeader>
       <div className='card-block'>
         { submitSucceeded && (
@@ -161,12 +160,12 @@ const AccountEmailForm = reduxForm({
           </div>
         )}
         <p className='card-text'>
-          Your current email address is:<br/>
+          Your current email address is:<br />
           <code>{`${user.email}`}</code>.
         </p>
         <p className='card-text'>
-          In order to change your email, please enter a new email address below.<br/>
-          We will send you a confirmation link to the new address.<br/>
+          In order to change your email, please enter a new email address below.<br />
+          We will send you a confirmation link to the new address.<br />
           After you have clicked this link, your new email address will be activated.
         </p>
         <Field
@@ -183,9 +182,9 @@ const AccountEmailForm = reduxForm({
       <div className='card-footer'>
         <div className='controls'>
           <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
-                     submitSucceeded={submitSucceeded}>continue</AppButton>
+            submitSucceeded={submitSucceeded}>continue</AppButton>
         </div>
-        { error && <GenericError problem={error}/> }
+        { error && <GenericError problem={error} /> }
       </div>
     </form>
   </FormCard>

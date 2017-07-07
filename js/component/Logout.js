@@ -1,14 +1,10 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
+import { logout } from '../state/auth'
 
 class LogoutScreen extends React.Component {
-  constructor (props) {
-    super(props)
-    this.onLogout = props.onLogout
-  }
-
   componentWillMount () {
-    this.onLogout()
+    this.props.dispatch(logout())
   }
 
   render () {

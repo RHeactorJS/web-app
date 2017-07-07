@@ -1,16 +1,13 @@
 /* global URLSearchParams */
 
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Field, reduxForm, SubmissionError } from 'redux-form'
-import { isEmail } from '../util/is-email'
-import { HttpProblem, JsonWebToken, User } from '@rheactorjs/models'
-import { URIValue } from '@rheactorjs/value-objects'
+import { JsonWebToken, User } from '@rheactorjs/models'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
 import { formInput, AppButton, FormHeader, GenericError, FormCard, ContainerRow } from './form-components'
-import { AccountNotFoundError } from './Login'
 
 const validate = ({password, password2}) => ({
   password: !password || password.length < 8,
@@ -23,7 +20,7 @@ const PasswordChangeConfirmForm = reduxForm({
 })(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => (
   <ContainerRow>
     <FormCard>
-      <form name='form' onSubmit={ handleSubmit }>
+      <form name='form' onSubmit={handleSubmit}>
         <FormHeader submitSucceeded={submitSucceeded} icon='settings_backup_restore'>Pick a new password</FormHeader>
         { submitSucceeded && (
           <div className='card-block'>
@@ -65,9 +62,9 @@ const PasswordChangeConfirmForm = reduxForm({
           <div className='card-footer'>
             <div className='controls'>
               <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
-                         submitSucceeded={submitSucceeded}>Continue</AppButton>
+                submitSucceeded={submitSucceeded}>Continue</AppButton>
             </div>
-            { error && <GenericError problem={error}/> }
+            { error && <GenericError problem={error} /> }
           </div>
         )}
       </form>
@@ -93,7 +90,7 @@ class PasswordChangeConfirmScreen extends React.Component {
   }
 
   render () {
-    return <PasswordChangeConfirmForm onSubmit={this.submit}/>
+    return <PasswordChangeConfirmForm onSubmit={this.submit} />
   }
 }
 

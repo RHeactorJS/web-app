@@ -3,6 +3,7 @@ import status from './status'
 import config from './config'
 import loading from './loading'
 import auth from './auth'
+import registration from './registration'
 import activation from './activation'
 import accountEmailChangeConfirm from './accountEmailChangeConfirm'
 import fileUpload from './fileUpload'
@@ -13,6 +14,7 @@ const rheactorJSApp = combineReducers({
   config,
   loading,
   auth,
+  registration,
   activation,
   accountEmailChangeConfirm,
   fileUpload,

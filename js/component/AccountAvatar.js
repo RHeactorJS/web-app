@@ -1,9 +1,9 @@
-/* global FileReader */
+/* global FileReader btoa */
 
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
-import { HttpProblem, JsonWebToken, User } from '@rheactorjs/models'
-import { EmailValue, URIValue } from '@rheactorjs/value-objects'
+import { Redirect } from 'react-router-dom'
+import { JsonWebToken, User } from '@rheactorjs/models'
+import { URIValue } from '@rheactorjs/value-objects'
 import { GenericModelAPIClient } from '../service/generic-api-client'
 import { JSONLD } from '../util/jsonld'
 import { API } from '../service/api'
@@ -91,8 +91,8 @@ export default class AccountAvatarScreen extends React.Component {
   render () {
     if (!this.autologinComplete) return null
     return this.user
-      ? <AccountAvatarForm onFileSelected={this.onFileSelected} error={this.error} progress={this.progress()} filename={this.filename()} avatar={this.user && this.user.avatar} label={this.user && this.user.name}/>
-      : <Redirect to={{pathname: '/login', returnTo: this.pathname}}/>
+      ? <AccountAvatarForm onFileSelected={this.onFileSelected} error={this.error} progress={this.progress()} filename={this.filename()} avatar={this.user && this.user.avatar} label={this.user && this.user.name} />
+      : <Redirect to={{pathname: '/login', returnTo: this.pathname}} />
   }
 
   onFileSelected = (e) => {
@@ -140,14 +140,14 @@ class AccountAvatarForm extends React.Component {
           <div className='card-block'>
             { this.avatar && (
               <div className='avatar-preview'>
-                <img src={this.avatar} alt={this.label}/><br />
+                <img src={this.avatar} alt={this.label} /><br />
                 {this.label}<br />
                 <hr />
               </div>
             )}
             {!(this.progress || this.result) && (
               <div>
-                <p>Please select an image to use as the new avatar.<br/>
+                <p>Please select an image to use as the new avatar.<br />
                   <small>We support JPG and PNG up to 10 MB.</small>
                 </p>
               </div>
@@ -155,17 +155,17 @@ class AccountAvatarForm extends React.Component {
             {(this.progress && !this.result) && (
               <div>
                 <small>Uploading <code>{this.filename}</code> …</small>
-                <Progress now={this.progress}/>
+                <Progress now={this.progress} />
               </div>
             )}
           </div>
           <div className='card-footer'>
-            <input type='file' id='file' style={{display: 'none'}} ref='uploadFile' onChange={this.onFileSelected}/>
+            <input type='file' id='file' style={{display: 'none'}} ref='uploadFile' onChange={this.onFileSelected} />
             <div className='controls'>
               <AppButton submitting={this.progress} valid submitFailed={this.submitFailed}
-                         onClick={this.onButtonClicked}>Change avatar …</AppButton>
+                onClick={this.onButtonClicked}>Change avatar …</AppButton>
             </div>
-            { this.error && <GenericError problem={this.error}/> }
+            { this.error && <GenericError problem={this.error} /> }
           </div>
         </FormCard>
       </ContainerRow>

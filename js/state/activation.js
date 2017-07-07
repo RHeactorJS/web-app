@@ -1,23 +1,29 @@
-const ACTIVATION_SUCCEEDED = 'ACTIVATION_SUCCEEDED'
-const ACTIVATION_FAILED = 'ACTIVATION_FAILED'
+const ACTIVATE_SUCCEEDED = 'ACTIVATE_SUCCEEDED'
+const ACTIVATE_FAILED = 'ACTIVATE_FAILED'
+export const ACTIVATE = 'ACTIVATE'
 
 export const success = () => ({
-  type: ACTIVATION_SUCCEEDED
+  type: ACTIVATE_SUCCEEDED
 })
 
-export const error = (problem) => ({
-  type: ACTIVATION_FAILED,
-  problem
+export const error = error => ({
+  type: ACTIVATE_FAILED,
+  error
 })
 
-const activation = (state = {activated: false, problem: undefined}, action) => {
+export const activate = token => ({
+  type: ACTIVATE,
+  token
+})
+
+export default (state = {activated: false, error: undefined}, action) => {
   switch (action.type) {
-    case ACTIVATION_FAILED:
+    case ACTIVATE_FAILED:
       return {
         activated: false,
-        problem: action.problem
+        error: action.error
       }
-    case ACTIVATION_SUCCEEDED:
+    case ACTIVATE_SUCCEEDED:
       return {
         activated: true
       }
@@ -25,5 +31,3 @@ const activation = (state = {activated: false, problem: undefined}, action) => {
       return state
   }
 }
-
-export default activation

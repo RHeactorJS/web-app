@@ -1,12 +1,14 @@
 import { EMAIL_CHANGE_SUCCEEDED } from './accountEmailChangeConfirm'
-const AUTHENTICATE = 'AUTHENTICATE'
-const TOKEN = 'TOKEN'
-const USER = 'USER'
+export const AUTHENTICATE = 'AUTHENTICATE'
+export const TOKEN = 'TOKEN'
+export const USER = 'USER'
 export const LOGIN = 'LOGIN'
 const LOGIN_FAILED = 'LOGIN_FAILED'
-const LOGOUT = 'LOGOUT'
-const AUTOLOGIN_COMPLETE = 'AUTOLOGIN_COMPLETE'
-const USER_UPDATED = 'USER_UPDATED'
+export const LOGOUT = 'LOGOUT'
+export const AUTOLOGIN = 'AUTOLOGIN'
+const AUTOLOGIN_SUCCESS = 'AUTOLOGIN_SUCCESS'
+const AUTOLOGIN_FAILED = 'AUTOLOGIN_FAILED'
+export const USER_UPDATED = 'USER_UPDATED'
 
 export const authenticate = (token, user) => ({
   type: AUTHENTICATE,
@@ -28,8 +30,18 @@ export const user = user => ({
   user
 })
 
-export const autologinComplete = (success, error) => ({
-  type: AUTOLOGIN_COMPLETE,
+export const autologin = () => ({
+  type: AUTOLOGIN
+})
+
+export const autologinSuccess = (token, user) => ({
+  type: AUTOLOGIN_SUCCESS,
+  token,
+  user
+})
+
+export const autologinFailed = (error) => ({
+  type: AUTOLOGIN_FAILED,
   error
 })
 
@@ -64,8 +76,10 @@ const auth = (state = {token: false, user: false, autologinComplete: false, auto
       return {...state, token: action.token}
     case USER:
       return {...state, user: action.user}
-    case AUTOLOGIN_COMPLETE:
-      return {...state, autologinComplete: true, autologinError: state.error}
+    case AUTOLOGIN_SUCCESS:
+      return {...state, autologinComplete: true, token: action.token, user: action.user}
+    case AUTOLOGIN_FAILED:
+      return {...state, autologinComplete: true, autologinError: action.error}
     case USER_UPDATED:
       return {...state, user: state.user.updated({[action.property]: action.value})}
     case EMAIL_CHANGE_SUCCEEDED:

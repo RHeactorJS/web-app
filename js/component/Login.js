@@ -15,11 +15,10 @@ export default class LoginScreen extends React.Component {
   componentWillReceiveProps ({token, error}) {
     if (token) {
       this.token = token
-      this.submitPromise.resolve()
+      this.submitPromise && this.submitPromise.resolve()
     }
     if (error) {
-      this.error = error
-      this.submitPromise.reject(new SubmissionError({_error: error}))
+      this.submitPromise && this.submitPromise.reject(new SubmissionError({_error: error}))
     }
   }
 
@@ -33,8 +32,8 @@ export default class LoginScreen extends React.Component {
 
   render () {
     return this.token
-      ? <Redirect to={{pathname: this.returnTo}}/>
-      : <LoginForm onSubmit={this.submit} from={this.from}/>
+      ? <Redirect to={{pathname: this.returnTo}} />
+      : <LoginForm onSubmit={this.submit} from={this.from} />
   }
 }
 
@@ -49,7 +48,7 @@ const LoginForm = reduxForm({
 })(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, from}) => (
   <ContainerRow>
     <FormCard>
-      <form name='form' onSubmit={ handleSubmit }>
+      <form name='form' onSubmit={handleSubmit}>
         <FormHeader submitSucceeded={submitSucceeded} icon='person'>Login</FormHeader>
         <div className='card-block'>
           {{
@@ -106,7 +105,7 @@ const LoginForm = reduxForm({
         <div className='card-footer'>
           <div className='controls'>
             <AppButton submitting={submitting} valid={valid} submitFailed={submitFailed}
-                       submitSucceeded={submitSucceeded}>Login</AppButton>
+              submitSucceeded={submitSucceeded}>Login</AppButton>
           </div>
           { error && (() => {
             switch (error.title) {
@@ -115,7 +114,7 @@ const LoginForm = reduxForm({
               case 'AccessDeniedError':
                 return <AccessDeniedError />
               default:
-                return <GenericError problem={error}/>
+                return <GenericError problem={error} />
             }
           })()}
         </div>

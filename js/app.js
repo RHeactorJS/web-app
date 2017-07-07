@@ -16,7 +16,6 @@ import PasswordChangeConfirm from './container/PasswordChangeConfirm'
 import AccountEmailChangeConfirm from './container/AccountEmailChangeConfirm'
 import AccountProfile from './container/AccountProfile'
 import AccountAvatar from './container/AccountAvatar'
-import { LoadUserDataFromClientStorage, ClientStoragePropertyToken, ClientStoragePropertyUser } from './container/ClientStorage'
 import Home from './container/Home'
 import AppUpdate from './container/AppUpdate'
 import React from 'react'
@@ -30,6 +29,9 @@ import { doneLoading } from './state/loading'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Status as StatusModel } from '@rheactorjs/models'
 import LoginMiddleware from './middleware/Login'
+import RegistrationMiddleware from './middleware/Registration'
+import ActivationMiddleware from './middleware/Activation'
+import ClientStorageMiddleware from './middleware/ClientStorage'
 
 // Get global configuration from index.html
 const config = {
@@ -45,7 +47,12 @@ const apiClient = new API(config.apiIndex, config.mimeType)
 // Init redux store
 const store = createStore(
   reducer,
-  applyMiddleware(LoginMiddleware(apiClient))
+  applyMiddleware(
+    LoginMiddleware(apiClient),
+    RegistrationMiddleware(apiClient),
+    ActivationMiddleware(apiClient),
+    ClientStorageMiddleware
+  )
 )
 
 // Make config available
@@ -75,9 +82,6 @@ ReactDOM.render(
         <Route exact path='/account/profile' component={AccountProfile} />
         <Route exact path='/account/email-change' component={AccountEmailChangeConfirm} />
         <Route exact path='/account/avatar' component={AccountAvatar} />
-        <LoadUserDataFromClientStorage />
-        <ClientStoragePropertyToken name='token' equals={(t1, t2) => t1.token === t2.token} />
-        <ClientStoragePropertyUser name='user' equals={(u1, u2) => u1.$id.toString() === u2.$id.toString() && u1.$version === u2.$version} />
       </div>
     </Router>
   </Provider>,
