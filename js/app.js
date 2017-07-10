@@ -3,35 +3,36 @@
 import loadFont from 'meownica-web-fonts-loader'
 
 import { URIValue } from '@rheactorjs/value-objects'
-import { API } from './service/api'
-import Status from './container/status'
-import Loading from './container/Loading'
-import Navigation from './container/Navigation'
-import Login from './container/Login'
-import Logout from './container/Logout'
-import Registration from './container/Registration'
-import Activation from './container/Activation'
-import PasswordChange from './container/PasswordChange'
-import PasswordChangeConfirm from './container/PasswordChangeConfirm'
-import AccountEmailChangeConfirm from './container/AccountEmailChangeConfirm'
-import AccountProfile from './container/AccountProfile'
+import { API } from './lib/api'
+import Status from './status/StatusContainer'
+import Loading from './loading/LoadingContainer'
+import Navigation from './navigation/NavigationContainer'
+import Login from './login/LoginContainer'
+import Logout from './login/LogoutContainer'
+import Registration from './registration/RegistrationContainer'
+import Activation from './registration/ActivationContainer'
+import PasswordChange from './password-change/PasswordChangeContainer'
+import PasswordChangeConfirm from './password-change/PasswordChangeConfirmContainer'
+import AccountEmailChangeConfirm from './profile/AccountEmailChangeConfirmContainer'
+import AccountProfile from './profile/AccountProfileContainer'
 import AccountAvatar from './container/AccountAvatar'
-import Home from './container/Home'
-import AppUpdate from './container/AppUpdate'
+import Home from './home/HomeContainer'
+import AppUpdate from './app-update/AppUpdateContainer'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import reducer from './state'
-import { setConfig } from './state/config'
-import { updateStatus } from './state/status'
-import { doneLoading } from './state/loading'
+import reducer from './reducers'
+import { setConfig } from './config/actions'
+import { updateStatus } from './status/actions'
+import { doneLoading } from './loading/actions'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Status as StatusModel } from '@rheactorjs/models'
-import LoginMiddleware from './middleware/Login'
-import RegistrationMiddleware from './middleware/Registration'
-import ActivationMiddleware from './middleware/Activation'
-import ClientStorageMiddleware from './middleware/ClientStorage'
+import LoginMiddleware from './login/middleware'
+import RegistrationMiddleware from './registration/middleware'
+import ClientStorageMiddleware from './client-storage/middleware'
+import PasswordChangeMiddleware from './password-change/middleware'
+import ProfileMiddleware from './profile/middleware'
 
 // Get global configuration from index.html
 const config = {
@@ -50,7 +51,8 @@ const store = createStore(
   applyMiddleware(
     LoginMiddleware(apiClient),
     RegistrationMiddleware(apiClient),
-    ActivationMiddleware(apiClient),
+    PasswordChangeMiddleware(apiClient),
+    ProfileMiddleware(apiClient),
     ClientStorageMiddleware
   )
 )

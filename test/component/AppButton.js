@@ -2,7 +2,7 @@
 
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
-import { AppButton } from '../../js/component/form-components'
+import { AppButton } from '../../js/app/form-components'
 import { expect } from 'chai'
 
 describe('AppButton', () => {

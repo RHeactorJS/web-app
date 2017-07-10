@@ -1,15 +1,9 @@
 import { connect } from 'react-redux'
 import AccountAvatar from '../component/AccountAvatar'
 import { success, error, upload } from '../state/fileUpload'
-import { userUpdated } from '../state/auth'
+import { userUpdated } from '../login/actions'
 
-const mapStateToProps = ({config: {apiIndex, mimeType, imageServiceIndex}, auth: {token, user, autologinComplete}, fileUpload: {uploadedURI, error, file, data}}) => ({
-  apiIndex,
-  mimeType,
-  imageServiceIndex,
-  token,
-  user,
-  autologinComplete,
+const mapStateToProps = ({fileUpload: {uploadedURI, error, file, data}}) => ({
   uploadedURI,
   error,
   file,
