@@ -10,6 +10,9 @@ export default class AccountProfileScreen extends React.Component {
   constructor (props) {
     super(props)
     this.pathname = props.location.pathname
+    this.autologinComplete = props.autologinComplete
+    this.user = props.user
+    if (this.user) this.props.dispatch(initialize('accountProfile', {firstname: this.user.firstname, lastname: this.user.lastname}))
   }
 
   componentWillReceiveProps ({autologinComplete, user, success, error}) {

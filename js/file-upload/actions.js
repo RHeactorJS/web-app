@@ -1,16 +1,11 @@
 const FILE_UPLOAD_ERROR = 'FILE_UPLOAD_ERROR'
-const FILE_UPLOAD = 'FILE_UPLOAD'
 export const FILE_UPLOAD_SUCCESS = 'FILE_UPLOAD_SUCCESS'
+export const UPLOAD_FILE_FOR = 'UPLOAD_FILE_FOR'
+export const UPLOADING = 'UPLOADING'
 
 export const error = error => ({
   type: FILE_UPLOAD_ERROR,
   error
-})
-
-export const upload = (file, data) => ({
-  type: FILE_UPLOAD,
-  file,
-  data
 })
 
 export const success = (uri, target) => ({
@@ -19,7 +14,18 @@ export const success = (uri, target) => ({
   target
 })
 
-export default (state = {uploadedURI: false, error: false, file: false, data: undefined}, action) => {
+export const uploadFileFor = (file, target) => ({
+  type: UPLOAD_FILE_FOR,
+  file,
+  target
+})
+
+export const uploading = file => ({
+  type: UPLOADING,
+  file
+})
+
+export default (state = {uploadedURI: false, error: false, file: false}, action) => {
   switch (action.type) {
     case FILE_UPLOAD_ERROR:
       return {
@@ -28,12 +34,11 @@ export default (state = {uploadedURI: false, error: false, file: false, data: un
         file: false,
         data: undefined
       }
-    case FILE_UPLOAD:
+    case UPLOADING:
       return {
         uploadedURI: false,
         error: false,
-        file: action.file,
-        data: action.data
+        file: action.file
       }
     case FILE_UPLOAD_SUCCESS:
       return {

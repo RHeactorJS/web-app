@@ -6,7 +6,7 @@ import auth from './login/actions'
 import registration from './registration/actions'
 import profile from './profile/actions'
 import passwordChange from './password-change/actions'
-import fileUpload from './state/fileUpload'
+import fileUpload from './file-upload/actions'
 import { reducer as formReducer } from 'redux-form'
 
 export default combineReducers({

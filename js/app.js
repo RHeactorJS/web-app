@@ -15,7 +15,7 @@ import PasswordChange from './password-change/PasswordChangeContainer'
 import PasswordChangeConfirm from './password-change/PasswordChangeConfirmContainer'
 import AccountEmailChangeConfirm from './profile/AccountEmailChangeConfirmContainer'
 import AccountProfile from './profile/AccountProfileContainer'
-import AccountAvatar from './container/AccountAvatar'
+import AccountAvatar from './profile/AccountAvatarContainer'
 import Home from './home/HomeContainer'
 import AppUpdate from './app-update/AppUpdateContainer'
 import React from 'react'
@@ -33,6 +33,7 @@ import RegistrationMiddleware from './registration/middleware'
 import ClientStorageMiddleware from './client-storage/middleware'
 import PasswordChangeMiddleware from './password-change/middleware'
 import ProfileMiddleware from './profile/middleware'
+import FileUploadMiddleware from './file-upload/middleware'
 
 // Get global configuration from index.html
 const config = {
@@ -44,6 +45,7 @@ const config = {
 
 // Init services
 const apiClient = new API(config.apiIndex, config.mimeType)
+const imageServiceApiClient = new API(config.imageServiceIndex, 'application/vnd.rheactorjs.image-service.v1+json')
 
 // Init redux store
 const store = createStore(
@@ -53,6 +55,7 @@ const store = createStore(
     RegistrationMiddleware(apiClient),
     PasswordChangeMiddleware(apiClient),
     ProfileMiddleware(apiClient),
+    FileUploadMiddleware(apiClient, imageServiceApiClient),
     ClientStorageMiddleware
   )
 )
