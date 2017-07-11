@@ -50,8 +50,8 @@ const PasswordChangeConfirmForm = reduxForm({
         { submitSucceeded && (
           <div className='card-block'>
             <div className='alert alert-success' role='alert'>
-              <p>Your password has been updated!</p>
-              <p>You can now <Link to='/login' className='text-nowrap'>log in</Link> with your email address and your new password.</p>
+              Your password has been updated!<br />
+              You can now <Link to='/login' className='text-nowrap'>log in</Link> with your email address and your new password.
             </div>
           </div>
         )}

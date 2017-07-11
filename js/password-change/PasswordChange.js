@@ -43,7 +43,7 @@ const PasswordChangeForm = reduxForm({
         { submitSucceeded && (
           <div className='card-block'>
             <div className='alert alert-success' role='alert'>
-              <p>We've sent you a confirmation link. Please check your email inbox.</p>
+              We've sent you a confirmation link. Please check your email inbox.
             </div>
           </div>
         )}

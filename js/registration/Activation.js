@@ -28,8 +28,8 @@ export default class ActivationScreen extends React.Component {
           <div className='card-block'>
             { this.activated && (
               <div className='alert alert-success' role='alert'>
-                <p>Awesome, your account has been activated!</p>
-                <p>You can now <Link to='/login' className='text-nowrap'>log in</Link> with your email address and password.</p>
+                Awesome, your account has been activated!<br />
+                You can now <Link to='/login' className='text-nowrap'>log in</Link> with your email address and password.
               </div>
             )}
             { !this.activated && !this.error && (

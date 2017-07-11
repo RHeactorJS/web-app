@@ -41,16 +41,14 @@ const RegistrationForm = reduxForm({
 })(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed}) => (
   <ContainerRow>
     <FormCard>
-      <form name='form' className='card' onSubmit={handleSubmit}>
+      <form name='form' onSubmit={handleSubmit}>
         <FormHeader submitSucceeded={submitSucceeded} icon='person_add'>Registration</FormHeader>
         { submitSucceeded && (
           <div className='card-block'>
             <div className='alert alert-success' role='alert'>
-              <p>Awesome, your account has been created!</p>
-              <p>
-                Before you can log in, we need to verify your email address.<br />
-                Please check your inbox and click the link we just sent you.
-              </p>
+              Awesome, your account has been created!<br />
+              Before you can log in, we need to verify your email address.<br />
+              Please check your inbox and click the link we just sent you.
             </div>
           </div>
         )}

@@ -54,12 +54,12 @@ const LoginForm = reduxForm({
           {{
             'TokenExpiredError': (
               <div className='alert alert-warning' role='alert'>
-                <p>Your login token expired, so we have logged you out.</p>
+                <i className='material-icons'>warning</i> Your login token expired, so we have logged you out.
               </div>
             ),
             'logout': (
               <div className='alert alert-success' role='alert'>
-                <p>You have been logged out …</p>
+                <i className='material-icons'>check_ok</i> You have been logged out …
               </div>
             )
           }[from]}
@@ -126,16 +126,12 @@ const LoginForm = reduxForm({
 export const AccountNotFoundError = () => (
   <div>
     <div className='alert alert-danger' role='alert'>
-      <p>
-        <i className='material-icons'>error</i>
-        We could not find an user account with that email.
-      </p>
+      <i className='material-icons'>error</i>
+      We could not find an user account with that email.
     </div>
     <div className='alert alert-warning alert-small' role='alert'>
-      <p>
-        <i className='material-icons'>help_outline</i>
-        <Link to='/register' className='text-nowrap'>Create a new one here …</Link>
-      </p>
+      <i className='material-icons'>help_outline</i>
+      <Link to='/register' className='text-nowrap'>Create a new one here …</Link>
     </div>
   </div>
 )
@@ -143,17 +139,13 @@ export const AccountNotFoundError = () => (
 const AccessDeniedError = () => (
   <div>
     <div className='alert alert-danger' role='alert'>
-      <p>
-        <i className='material-icons'>error</i>
-        You have provided an invalid password!
-      </p>
+      <i className='material-icons'>error</i>
+      You have provided an invalid password!
     </div>
     <div className='alert alert-warning alert-small' role='alert'>
-      <p>
-        <i className='material-icons'>help_outline</i>
-        <span>Forgot your password?&nbsp;</span>
-        <Link to='/password-change' className='text-nowrap'>Request a new one here …</Link>
-      </p>
+      <i className='material-icons'>help_outline</i>
+      <span>Forgot your password?&nbsp;</span>
+      <Link to='/password-change' className='text-nowrap'>Request a new one here …</Link>
     </div>
   </div>
 )

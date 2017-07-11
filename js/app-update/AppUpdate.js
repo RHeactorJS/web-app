@@ -8,13 +8,9 @@ export default ({backendVersion, frontendVersion, appName}) => {
   console.debug(`Server version ${backendVersion} is newer than my version ${frontendVersion}!`)
   return (
     <div className='alert alert-warning'>
-      <p>
-        <i className='material-icons'>warning</i>
-        {appName} has been updated to version {backendVersion}
-      </p>
-      <p>
-        <strong>Please reload the page.</strong>
-      </p>
+      <i className='material-icons'>warning</i>
+      {appName} has been updated to version {backendVersion}<br />
+      <strong>Please reload the page.</strong>
     </div>
   )
 }

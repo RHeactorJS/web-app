@@ -27,7 +27,7 @@ export default class AccountEmailChangeConfirmScreen extends React.Component {
         <div className='card-block'>
           { this.success && (
             <div className='alert alert-success' role='alert'>
-              <p>Your new email address is now active.</p>
+              Your new email address is now active.
             </div>
           )}
           { !this.success && !this.error && (
