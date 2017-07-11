@@ -16,6 +16,7 @@ import PasswordChangeConfirm from './password-change/PasswordChangeConfirmContai
 import AccountEmailChangeConfirm from './profile/AccountEmailChangeConfirmContainer'
 import AccountProfile from './profile/AccountProfileContainer'
 import AccountAvatar from './profile/AccountAvatarContainer'
+import AdminUsers from './admin/AdminUsersContainer'
 import Home from './home/HomeContainer'
 import AppUpdate from './app-update/AppUpdateContainer'
 import React from 'react'
@@ -34,6 +35,7 @@ import ClientStorageMiddleware from './client-storage/middleware'
 import PasswordChangeMiddleware from './password-change/middleware'
 import ProfileMiddleware from './profile/middleware'
 import FileUploadMiddleware from './file-upload/middleware'
+import AdminMiddleware from './admin/middleware'
 import { autoRefreshToken } from './app/autoRefreshToken'
 
 // Get global configuration from index.html
@@ -56,6 +58,7 @@ const store = createStore(
     RegistrationMiddleware(apiClient),
     PasswordChangeMiddleware(apiClient),
     ProfileMiddleware(apiClient),
+    AdminMiddleware(apiClient),
     FileUploadMiddleware(apiClient, imageServiceApiClient),
     ClientStorageMiddleware
   )
@@ -88,6 +91,7 @@ ReactDOM.render(
         <Route exact path='/account/profile' component={AccountProfile} />
         <Route exact path='/account/email-change' component={AccountEmailChangeConfirm} />
         <Route exact path='/account/avatar' component={AccountAvatar} />
+        <Route exact path='/admin/users' component={AdminUsers} />
       </div>
     </Router>
   </Provider>,

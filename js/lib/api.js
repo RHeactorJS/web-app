@@ -57,9 +57,9 @@ export class API {
   constructor (apiIndex, mimeType) {
     this.apiIndex = URIValueType(apiIndex, ['API()', 'apiIndex:URIValue'])
     this.mimeType = StringType(mimeType, ['API()', 'mimeType:String'])
-    this.modelGet = modelFetch.bind(undefined, 'GET', mimeType)
-    this.modelPost = modelFetch.bind(undefined, 'POST', mimeType)
-    this.modelPut = modelFetch.bind(undefined, 'PUT', mimeType)
+    this.modelGet = modelFetch.bind(this, 'GET', mimeType)
+    this.modelPost = modelFetch.bind(this, 'POST', mimeType)
+    this.modelPut = modelFetch.bind(this, 'PUT', mimeType)
   }
 
   /**

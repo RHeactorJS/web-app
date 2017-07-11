@@ -1,59 +1,6 @@
 <div class="container">
   <article class="row">
     <section class="col-xs-12 col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h1 class="card-title">
-            <i class="material-icons">people</i>
-            Users
-          </h1>
-        </div>
-        <div class="list-group">
-          <form class="list-group-item" name="userSearchForm">
-            <fieldset class="form-group one-line">
-              <label for="userSearch" class="sr-only">Search</label>
-              <div class="input-group">
-                <div class="input-group-addon">
-                  <i class="material-icons">email</i>
-                </div>
-                <input class="form-control"
-                       type="email"
-                       placeholder="Search by email …"
-                       id="userSearch"
-                       name="searchTerm"
-                       bootstrap-error-states
-                       data-ng-model="vm.searchTerm"
-                       data-ng-change="userSearchForm.$valid && vm.search()">
-                <div class="input-group-addon" data-ng-if="!userSearchForm.$pristine">
-                  <i class="material-icons control" data-ng-click="vm.searchTerm = ''; userSearchForm.$setPristine(); vm.search()">delete</i>
-                </div>
-              </div>
-            </fieldset>
-          </form>
-          <div class="list-group-item" role="navigation">
-            <span class="loading" data-ng-if="vm.l.$active">
-              <i class="material-icons spin">hourglass_empty</i>
-            </span>
-            <div class="btn-group" role="group" aria-label="Pager" data-ng-show="vm.paginatedList.to">
-              <button type="button" class="btn btn-secondary btn-sm" title="Previous" data-ng-disabled="vm.l.$active || !vm.paginatedList.hasPrev" data-ng-click="vm.prev()">
-                <i class="material-icons">navigate_before</i>
-              </button>
-              <button type="button" class="btn btn-secondary btn-sm" title="Next" data-ng-disabled="vm.l.$active || !vm.paginatedList.hasNext" data-ng-click="vm.next()">
-                <i class="material-icons">navigate_next</i>
-              </button>
-            </div>
-            <span data-ng-if="!vm.l.$active">
-              <strong>%%vm.paginatedList.from%%</strong>&ndash;<strong>%%vm.paginatedList.to%%</strong> of <strong>%%vm.paginatedList.total%%</strong>
-            </span>
-          </div>
-          <a data-ui-sref="admin.user({id: (user|idparam)})" class="list-group-item" data-ng-repeat="user in vm.paginatedList.items">
-            <i class="material-icons" data-ng-if="user.superUser" title="SuperUser">security</i>
-            <span>%%user.name%%</span>
-          </a>
-        </div>
-      </div>
-    </section>
-    <section class="col-xs-12 col-md-6">
       <form name="form" class="card">
         <div class="card-header">
           <h2 class="card-title">

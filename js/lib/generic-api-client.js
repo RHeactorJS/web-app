@@ -1,6 +1,6 @@
 import { URIValueType } from '@rheactorjs/value-objects'
-import { JsonWebTokenType, MaybeJsonWebTokenType, VersionNumberType } from '@rheactorjs/models'
-import { Boolean as BooleanType, Object as ObjectType } from 'tcomb'
+import { JsonWebTokenType, MaybeJsonWebTokenType, VersionNumberType, List } from '@rheactorjs/models'
+import { Boolean as BooleanType, Object as ObjectType, Function as FunctionType } from 'tcomb'
 import { APIType } from './api'
 
 export class GenericModelAPIClient {
@@ -9,10 +9,12 @@ export class GenericModelAPIClient {
    * @param {Model} model
    */
   constructor (api, model) {
-    this.api = APIType(api, ['GenericModelAPIClient', 'api:api'])
-    this.apiGet = this.api.modelGet.bind(undefined, model)
-    this.apiPost = this.api.modelPost.bind(undefined, model)
-    this.apiPut = this.api.modelPut.bind(undefined, model)
+    this.api = APIType(api, ['GenericModelAPIClient()', 'api:api'])
+    FunctionType(model.fromJSON, ['GenericModelAPIClient()', 'model:Model'])
+    this.model = model
+    this.apiGet = this.api.modelGet.bind(this.api, model)
+    this.apiPost = this.api.modelPost.bind(this.api, model)
+    this.apiPut = this.api.modelPut.bind(this.api, model)
   }
 
   /**
@@ -57,5 +59,19 @@ export class GenericModelAPIClient {
     VersionNumberType(version, ['GenericModelAPIClient.update', 'version:VersionNumber'])
     JsonWebTokenType(token, ['GenericModelAPIClient.update', 'token:JsonWebToken'])
     return this.apiPut(endpoint, token, data, version)
+  }
+
+  /**
+   * Fetch a list of items from the endpoint
+   *
+   * @param {URIValue} endpoint
+   * @param {Object} query
+   * @param {JsonWebToken} token
+   * @returns {Promise.<Model>}
+   */
+  list (endpoint, query, token) {
+    URIValueType(endpoint, ['GenericModelAPIClient.list', 'endpoint:URIValue'])
+    MaybeJsonWebTokenType(token, ['GenericModelAPIClient.get', 'token:?JsonWebToken'])
+    return this.api.modelPost({$context: List.$context, fromJSON: data => List.fromJSON(data, this.model.fromJSON)}, endpoint, token, query)
   }
 }

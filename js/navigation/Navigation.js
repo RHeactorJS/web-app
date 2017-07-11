@@ -38,6 +38,7 @@ export default ({user, token, appName, connected, refreshingToken, dispatch}) =>
               }
             </abbr>
           </li>
+          {user.superUser && <AdminNavigation />}
           { user && (
             <li className='nav-item dropdown'>
               <a className='nav-link dropdown-toggle' id='accountDropdown' data-toggle='dropdown' aria-haspopup='true'
@@ -98,3 +99,17 @@ export default ({user, token, appName, connected, refreshingToken, dispatch}) =>
     </nav>
   )
 }
+
+const AdminNavigation = () => (
+  <li className='nav-item dropdown'>
+    <a className='nav-link dropdown-toggle' id='adminDropdown' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='Administration'>
+      <i className='material-icons'>security</i>
+    </a>
+    <div className='dropdown-menu' aria-labelledby='adminDropdown'>
+      <Link to='/admin/users' className='dropdown-item'>
+        <i className='material-icons'>people</i>
+        <span>Users</span>
+      </Link>
+    </div>
+  </li>
+)

@@ -1,12 +1,10 @@
 // List pagination
 *[role=navigation] {
   @include clearfix();
-  span, .btn-group {
-    float: right;
-  }
   span {
+    flex-grow: 1;
+    text-align: right;
     margin-right: 0.5rem;
-    line-height: 2rem;
   }
   .loading {
     float: left;
