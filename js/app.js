@@ -34,6 +34,7 @@ import ClientStorageMiddleware from './client-storage/middleware'
 import PasswordChangeMiddleware from './password-change/middleware'
 import ProfileMiddleware from './profile/middleware'
 import FileUploadMiddleware from './file-upload/middleware'
+import { autoRefreshToken } from './app/autoRefreshToken'
 
 // Get global configuration from index.html
 const config = {
@@ -118,8 +119,11 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('app-update')
 )
+// Refresh token on user activity
+autoRefreshToken(store)
 
 // Notify loading indicator that we are done
 store.dispatch(doneLoading())
 
+// Load webfonts
 loadFont('//fonts.googleapis.com/css?family=Fira+Sans:400,300', 'webfont-loaded')

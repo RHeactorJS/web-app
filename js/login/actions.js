@@ -8,6 +8,7 @@ export const LOGOUT = 'LOGOUT'
 export const AUTOLOGIN = 'AUTOLOGIN'
 export const AUTOLOGIN_SUCCESS = 'AUTOLOGIN_SUCCESS'
 export const AUTOLOGIN_FAILED = 'AUTOLOGIN_FAILED'
+export const REFRESH_TOKEN = 'REFRESH_TOKEN'
 
 export const authenticate = (token, user) => ({
   type: AUTHENTICATE,
@@ -55,7 +56,11 @@ export const loginFailed = error => ({
   error
 })
 
-export default (state = {token: false, user: false, autologinComplete: false, autologinError: false, error: false}, action) => {
+export const refreshToken = () => ({
+  type: REFRESH_TOKEN
+})
+
+export default (state = {token: false, user: false, autologinComplete: false, autologinError: false, error: false, refreshingToken: false}, action) => {
   switch (action.type) {
     case LOGIN:
       return {...state, error: false}
@@ -66,7 +71,7 @@ export default (state = {token: false, user: false, autologinComplete: false, au
     case LOGOUT:
       return {...state, token: false, user: false}
     case TOKEN:
-      return {...state, token: action.token}
+      return {...state, token: action.token, refreshingToken: false}
     case USER:
       return {...state, user: action.user}
     case AUTOLOGIN_SUCCESS:
@@ -75,6 +80,8 @@ export default (state = {token: false, user: false, autologinComplete: false, au
       return {...state, autologinComplete: true, autologinError: action.error}
     case USER_UPDATED:
       return {...state, user: state.user.updated({[action.property]: action.value})}
+    case REFRESH_TOKEN:
+      return {...state, refreshingToken: true}
     default:
       return state
   }

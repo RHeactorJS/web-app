@@ -2,9 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 import moment from 'moment'
+import { refreshToken } from '../login/actions'
 
-export default ({user, token, appName, connected}) => {
-  const refreshToken = () => {}
+export default ({user, token, appName, connected, refreshingToken, dispatch}) => {
   const tokenLifetime = token ? Math.max(token.exp.getTime() - Date.now(), 0) : 0
   const tokenLifetimeHuman = token ? moment.duration(tokenLifetime).humanize() : 'Expired'
   return (
@@ -62,10 +62,9 @@ export default ({user, token, appName, connected}) => {
           )}
           { token && (
             <li className='nav-item'>
-              <a className='nav-link' title='Remaining time until auto-logout. Click to prolong.' onClick={refreshToken}>
-                { tokenLifetime > 0
-                  ? <i className='material-icons'>schedule</i>
-                  : <i className='material-icons'>warning</i>}
+              <a className='nav-link' title='Remaining time until auto-logout. Click to prolong.' onClick={() => dispatch(refreshToken())}>
+                { refreshingToken && (<i className='material-icons spin'>hourglass_empty</i>)}
+                { !refreshingToken && (<i className='material-icons'>{tokenLifetime > 0 ? 'schedule' : 'warning'}</i>)}
                 <span>{tokenLifetimeHuman}</span>
               </a>
             </li>
