@@ -7,7 +7,8 @@ import registration from './registration/actions'
 import profile from './profile/actions'
 import passwordChange from './password-change/actions'
 import fileUpload from './file-upload/actions'
-import admin from './admin/actions'
+import adminUsers from './admin/Users/actions'
+import adminEditUser from './admin/EditUser/actions'
 import { reducer as formReducer } from 'redux-form'
 
 export default combineReducers({
@@ -19,6 +20,7 @@ export default combineReducers({
   passwordChange,
   profile,
   fileUpload,
-  admin,
+  adminUsers,
+  adminEditUser,
   form: formReducer
 })

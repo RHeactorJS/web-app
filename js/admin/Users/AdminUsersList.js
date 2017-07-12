@@ -1,18 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { FormHeader, FormCard } from '../app/form-components'
+import { FormHeader, FormCard } from '../../app/form-components'
 import { fetchUsers, fetchPreviousUsers, fetchNextUsers } from './actions'
 import { debounce } from 'lodash'
-import { isEmail } from '../lib/is-email'
+import { isEmail } from '../../lib/is-email'
 
 export default class AdminUsersList extends React.Component {
   componentWillMount () {
     this.props.dispatch(fetchUsers())
   }
 
-  componentWillReceiveProps ({fetchingUsers, usersList}) {
-    this.fetchingUsers = fetchingUsers
-    this.usersList = usersList
+  componentWillReceiveProps ({fetching, users}) {
+    this.fetching = fetching
+    this.users = users
   }
 
   onSearch = (value) => {
@@ -21,28 +21,28 @@ export default class AdminUsersList extends React.Component {
 
   render () {
     const prevButtonAttrs = {
-      disabled: !this.usersList || !this.usersList.hasPrev
+      disabled: !this.users || !this.users.hasPrev
     }
     const nextButtonAttrs = {
-      disabled: !this.usersList || !this.usersList.hasNext
+      disabled: !this.users || !this.users.hasNext
     }
     return (
       <FormCard half>
         <FormHeader icon='people'>Users</FormHeader>
         <div className='list-group'>
           <div className='list-group-item' role='navigation'>
-            <UserSearch onChange={this.onSearch} userQuery={this.props.userQuery} />
-            { !this.usersList
+            <UserSearch onChange={this.onSearch} query={this.props.query} />
+            { !this.users
               ? <span className='loading'><i className='material-icons spin'>hourglass_empty</i> <span>Loading users …</span></span>
-              : <span><strong>{this.usersList.from}</strong>&ndash;<strong>{this.usersList.from}</strong> of <strong>{this.usersList.total}</strong></span>
+              : <span><strong>{this.users.from}</strong>&ndash;<strong>{this.users.from}</strong> of <strong>{this.users.total}</strong></span>
             }
-            { this.usersList && (
+            { this.users && (
               <div className='btn-group' role='group' aria-label='Pager'>
                 <button type='button'
                   className='btn btn-secondary btn-sm'
                   title='Previous'
                   {...prevButtonAttrs}
-                  onClick={() => this.props.dispatch(fetchPreviousUsers(this.usersList))}
+                  onClick={() => this.props.dispatch(fetchPreviousUsers(this.users))}
                 >
                   <i className='material-icons'>navigate_before</i>
                 </button>
@@ -50,7 +50,7 @@ export default class AdminUsersList extends React.Component {
                   className='btn btn-secondary btn-sm'
                   title='Next'
                   {...nextButtonAttrs}
-                  onClick={() => this.props.dispatch(fetchNextUsers(this.usersList))}
+                  onClick={() => this.props.dispatch(fetchNextUsers(this.users))}
                 >
                   <i className='material-icons'>navigate_next</i>
                 </button>
@@ -58,7 +58,7 @@ export default class AdminUsersList extends React.Component {
             )}
           </div>
           {
-            this.usersList && this.usersList.items.map(({$id, name, superUser}) => (<Link to={`/admin/user?id=${encodeURIComponent($id)}`} className='list-group-item' key={$id}>
+            this.users && this.users.items.map(({$id, name, superUser}) => (<Link to={`/admin/user?id=${encodeURIComponent($id)}`} className='list-group-item' key={$id}>
               { superUser && <i className='material-icons' title='SuperUser'>security</i> }
               <span>{name}</span>
             </Link>))
@@ -73,7 +73,7 @@ class UserSearch extends React.Component {
   constructor (props) {
     super(props)
     this.onChange = debounce(props.onChange, 250)
-    this.state = {searchTerm: (props.userQuery && props.userQuery.email) || ''}
+    this.state = {searchTerm: (props.query && props.query.email) || ''}
   }
 
   clear = () => {

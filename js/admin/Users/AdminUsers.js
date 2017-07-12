@@ -1,9 +1,9 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { ContainerRow } from '../app/form-components'
+import { ContainerRow } from '../../app/form-components'
 import AdminUsersList from './AdminUsersList'
 import AdminCreateUser from './AdminCreateUser'
-import AccessDenied from '../app/AccessDenied'
+import AccessDenied from '../../app/AccessDenied'
 
 export default class AdminUsersScreen extends React.Component {
   constructor (props) {
@@ -11,14 +11,14 @@ export default class AdminUsersScreen extends React.Component {
     this.pathname = props.location.pathname
     this.autologinComplete = props.autologinComplete
     this.me = props.me
-    this.userQuery = props.userQuery
+    this.query = props.query
   }
 
-  componentWillReceiveProps ({autologinComplete, me, userQuery}) {
+  componentWillReceiveProps ({autologinComplete, me, query}) {
     if (autologinComplete) {
       this.autologinComplete = autologinComplete
       this.me = me
-      this.userQuery = userQuery
+      this.query = query
     }
   }
 

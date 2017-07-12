@@ -16,8 +16,8 @@ import PasswordChangeConfirm from './password-change/PasswordChangeConfirmContai
 import AccountEmailChangeConfirm from './profile/AccountEmailChangeConfirmContainer'
 import AccountProfile from './profile/AccountProfileContainer'
 import AccountAvatar from './profile/AccountAvatarContainer'
-import AdminUsers from './admin/AdminUsersContainer'
-import AdminEditUser from './admin/AdminEditUserContainer'
+import AdminUsers from './admin/Users/AdminUsersContainer'
+import AdminEditUser from './admin/EditUser/AdminEditUserContainer'
 import Home from './home/HomeContainer'
 import AppUpdate from './app-update/AppUpdateContainer'
 import React from 'react'
@@ -36,7 +36,8 @@ import ClientStorageMiddleware from './client-storage/middleware'
 import PasswordChangeMiddleware from './password-change/middleware'
 import ProfileMiddleware from './profile/middleware'
 import FileUploadMiddleware from './file-upload/middleware'
-import AdminMiddleware from './admin/middleware'
+import AdminUsersMiddleware from './admin/Users/middleware'
+import AdminEditUserMiddleware from './admin/EditUser/middleware'
 import { autoRefreshToken } from './app/autoRefreshToken'
 
 // Get global configuration from index.html
@@ -59,7 +60,8 @@ const store = createStore(
     RegistrationMiddleware(apiClient),
     PasswordChangeMiddleware(apiClient),
     ProfileMiddleware(apiClient),
-    AdminMiddleware(apiClient),
+    AdminUsersMiddleware(apiClient),
+    AdminEditUserMiddleware(apiClient),
     FileUploadMiddleware(apiClient, imageServiceApiClient),
     ClientStorageMiddleware
   )

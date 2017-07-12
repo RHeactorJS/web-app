@@ -2,24 +2,18 @@
 
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { formInput, GenericError, FormCard, ContainerRow, AppButton } from '../app/form-components'
-import AccessDenied from '../app/AccessDenied'
-import Loading from '../app/Loading'
-import { isEmail } from '../lib/is-email'
+import { formInput, GenericError, FormCard, ContainerRow, AppButton } from '../../app/form-components'
+import AccessDenied from '../../app/AccessDenied'
+import Loading from '../../app/Loading'
+import { isEmail } from '../../lib/is-email'
 import { URIValue } from '@rheactorjs/value-objects'
 import { Field, reduxForm, SubmissionError, initialize } from 'redux-form'
-import { fetchUser, changeUser } from './actions'
+import { fetch, change } from './actions'
 
 export default class AdminEditUserScreen extends React.Component {
   constructor (props) {
     super(props)
-    this.pathname = props.location.pathname
-    const id = props.location.search && new URLSearchParams(props.location.search).get('id')
-    this.userId = new URIValue(decodeURIComponent(id))
-    this.autologinComplete = props.autologinComplete
-    this.me = props.me
-    this.fetchingUsers = props.fetchingUsers
-    this.user = props.user
+    this.componentWillReceiveProps(props)
   }
 
   componentWillMount () {
@@ -30,22 +24,24 @@ export default class AdminEditUserScreen extends React.Component {
     if (this.fetched) return
     if (this.autologinComplete) {
       this.fetched = true
-      this.props.dispatch(fetchUser(this.userId))
+      this.props.dispatch(fetch(this.userId))
     }
   }
 
-  componentWillReceiveProps ({autologinComplete, me, fetchingUsers, user, changingUser}) {
+  componentWillReceiveProps ({location, autologinComplete, me, user, changing, success, error}) {
+    this.pathname = location.pathname
+    const id = location.search && new URLSearchParams(location.search).get('id')
+    this.userId = new URIValue(decodeURIComponent(id))
+    this.autologinComplete = autologinComplete
+    this.changing = changing
     if (autologinComplete) {
       this.autologinComplete = autologinComplete
       this.me = me
       this.fetchUser()
     }
-    this.fetchingUsers = fetchingUsers
-    this.changingUser = changingUser
     this.user = user
-    if (user) {
-      this.props.dispatch(initialize('adminEditUser', user))
-    }
+    this.success = success
+    this.error = error
   }
 
   changeUser = ({firstname, lastname, email}) => {
@@ -63,24 +59,32 @@ export default class AdminEditUserScreen extends React.Component {
       value = email
     }
     if (!prop) return
-    this.props.dispatch(changeUser(prop, value))
+    console.log('change', prop, value)
+    this.props.dispatch(change(this.user, prop, value))
+    this.props.dispatch(initialize('adminEditUser', {firstname, lastname, email}))
     return true
   }
 
   toggleActive = () => {
-    this.props.dispatch(changeUser(this.user, 'active', !this.user.active))
+    this.props.dispatch(change(this.user, 'active', !this.user.active))
     return true
   }
 
   render () {
-    if (!this.autologinComplete) return null
-    return this.me
-      ? (<ContainerRow>
-        { this.me.superUser && <AdminEditUserForm changeUser={this.changeUser} toggleActive={this.toggleActive} user={this.user} changingUser={this.changingUser} /> }
-        { !this.me.superUser && <AccessDenied />
-        }
-      </ContainerRow>)
-      : <Redirect to={{pathname: '/login', returnTo: this.pathname}} />
+    if (!this.autologinComplete) return <Loading>Loading …</Loading>
+    if (!this.me) return <Redirect to={{pathname: '/login', returnTo: this.pathname}} />
+    if (!this.me.superUser) return <AccessDenied />
+    if (!this.user) return <Loading>Loading User …</Loading>
+    return (<ContainerRow>
+      <AdminEditUserForm
+        dispatch={this.props.dispatch}
+        changeUser={this.changeUser}
+        toggleActive={this.toggleActive}
+        user={this.user}
+        success={this.success}
+        error={this.error}
+        changing={this.changing} />
+    </ContainerRow>)
   }
 }
 
@@ -90,10 +94,13 @@ class AdminEditUserForm extends React.Component {
     this.changeUser = props.changeUser
     this.toggleActive = props.toggleActive
     this.user = props.user
-    this.changingUser = props.changingUser
+    this.changing = props.changing
+    console.log('init form')
+    props.dispatch(initialize('adminEditUser', {firstname: props.user.firstname, lastname: props.user.lastname, email: props.user.email.toString()}))
   }
 
   submitForm = (values) => {
+    console.log('submit form', values)
     if (!this.changeUser(values)) return
     return new Promise((resolve, reject) => {
       this.submitPromise = {resolve, reject}
@@ -111,8 +118,7 @@ class AdminEditUserForm extends React.Component {
   }
 
   render () {
-    if (!this.user) return (<Loading>Loading User …</Loading>)
-    return (<AdminEditUserReduxForm user={this.user} onSubmit={this.submitForm} toggleActive={this.toggleActive} changingUser={this.changingUser} />)
+    return (<AdminEditUserReduxForm user={this.user} onSubmit={this.submitForm} toggleActive={this.toggleActive} changing={this.changing} />)
   }
 }
 
@@ -124,8 +130,9 @@ const validateUserForm = ({firstname, lastname, email}) => ({
 
 const AdminEditUserReduxForm = reduxForm({
   form: 'adminEditUser',
+  enableReinitialize: true,
   validate: validateUserForm
-})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, user, toggleActive, changingUser}) => (
+})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, user, toggleActive, changing}) => (
   <FormCard>
     <form name='form'>
       <div className='card-header'>
@@ -145,14 +152,14 @@ const AdminEditUserReduxForm = reduxForm({
               <span>
                 <i className='material-icons success'>check_box</i>
                 <span>Yes</span>
-                <AppButton submitting={changingUser} valid onClick={toggleActive} right icon='block'>deactivate</AppButton>
+                <AppButton submitting={changing} valid onClick={toggleActive} right icon='block'>deactivate</AppButton>
               </span>
             )}
             { !user.active && (
               <span>
                 <i className='material-icons danger'>block</i>
                 <span>No</span>
-                <AppButton submitting={changingUser} valid onClick={toggleActive} right icon='check_box'>activate</AppButton>
+                <AppButton submitting={changing} valid onClick={toggleActive} right icon='check_box'>activate</AppButton>
               </span>
             )}
           </dd>

@@ -76,9 +76,9 @@ export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, chi
 
 export const ContainerRow = ({children}) => (
   <div className='container'>
-    <article className='row'>
+    <div className='row'>
       {children}
-    </article>
+    </div>
   </div>
 )
 

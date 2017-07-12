@@ -20,7 +20,7 @@ else
 	./node_modules/.bin/uglifyjs $< -o $@
 endif
 
-build/%.js: js/%.js js/**/*.js
+build/%.js: js/%.js js/**/*.js js/**/**/*.js
 	@mkdir -p $(dir $@)
 	./node_modules/.bin/browserify $< -o $@ -t [ babelify ]
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm, SubmissionError, initialize } from 'redux-form'
-import { isEmail } from '../lib/is-email'
-import { AppButton, FormCard, FormHeader, formInput, GenericError } from '../app/form-components'
+import { isEmail } from '../../lib/is-email'
+import { AppButton, FormCard, FormHeader, formInput, GenericError } from '../../app/form-components'
 import { createUser } from './actions'
 
 export default class AdminCreateUser extends React.Component {
@@ -12,13 +12,13 @@ export default class AdminCreateUser extends React.Component {
     })
   }
 
-  componentWillReceiveProps ({createUserSuccess, createUserError}) {
-    if (createUserSuccess) {
+  componentWillReceiveProps ({success, error}) {
+    if (success) {
       this.submitPromise.resolve()
       this.props.dispatch(initialize('adminCreateUser', {}))
     }
-    if (createUserError) {
-      this.submitPromise.reject(new SubmissionError({_error: createUserError}))
+    if (error) {
+      this.submitPromise.reject(new SubmissionError({_error: error}))
     }
   }
 
