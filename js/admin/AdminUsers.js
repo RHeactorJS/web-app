@@ -1,41 +1,34 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { FormHeader, FormCard, ContainerRow } from '../app/form-components'
+import { ContainerRow } from '../app/form-components'
 import AdminUsersList from './AdminUsersList'
 import AdminCreateUser from './AdminCreateUser'
+import AccessDenied from '../app/AccessDenied'
 
 export default class AdminUsersScreen extends React.Component {
   constructor (props) {
     super(props)
     this.pathname = props.location.pathname
     this.autologinComplete = props.autologinComplete
-    this.user = props.user
+    this.me = props.me
+    this.userQuery = props.userQuery
   }
 
-  componentWillReceiveProps ({autologinComplete, user, userQuery}) {
+  componentWillReceiveProps ({autologinComplete, me, userQuery}) {
     if (autologinComplete) {
       this.autologinComplete = autologinComplete
-      this.user = user
+      this.me = me
       this.userQuery = userQuery
     }
   }
 
   render () {
     if (!this.autologinComplete) return null
-    return (this.user)
+    return this.me
       ? (<ContainerRow>
-        { this.user.superUser && <AdminUsersList {...this.props} /> }
-        { this.user.superUser && <AdminCreateUser {...this.props} /> }
-        { !this.user.superUser && (
-          <FormCard>
-            <FormHeader icon='lock'>Access Denied</FormHeader>
-            <div className='card-block'>
-              <div className='alert alert-danger' role='alert'>
-                <i className='material-icons'>warning</i> You are not allowed to access this section!
-              </div>
-            </div>
-          </FormCard>)
-        }
+        { this.me.superUser && <AdminUsersList {...this.props} /> }
+        { this.me.superUser && <AdminCreateUser {...this.props} /> }
+        { !this.me.superUser && <AccessDenied /> }
       </ContainerRow>)
       : <Redirect to={{pathname: '/login', returnTo: this.pathname}} />
   }

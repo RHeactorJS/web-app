@@ -23,13 +23,13 @@ export const formInput = ({input, id, label, hint, tabIndex, autoFocus, required
   </fieldset>
 )
 
-export const FormHeader = ({submitSucceeded, icon, children}) => (
+export const FormHeader = ({submitSucceeded, icon, children, spin}) => (
   <div className='card-header'>
     <h1 className='card-title'>
       {
         submitSucceeded
           ? <i className='material-icons success'>check_circle</i>
-          : <i className='material-icons'>{icon}</i>
+          : <i className={classNames({'material-icons': true, spin})}>{icon}</i>
       }
       {children}
     </h1>
@@ -48,7 +48,7 @@ export const GenericError = ({problem}) => {
   )
 }
 
-export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, children, onClick}) => {
+export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, children, onClick, right = false, icon = 'send'}) => {
   const buttonIconClass = classNames({'material-icons': true, spin: submitting})
   let buttonIconSymbol
   if (!valid) {
@@ -60,14 +60,14 @@ export const AppButton = ({submitting, valid, submitFailed, submitSucceeded, chi
   } else if (submitSucceeded) {
     buttonIconSymbol = 'check_ok'
   } else {
-    buttonIconSymbol = 'send'
+    buttonIconSymbol = icon
   }
   const disabled = !valid || submitting
   const attrs = {}
   if (disabled) attrs.disabled = true
   if (onClick) attrs.onClick = onClick
   return (
-    <button type='submit' className='btn btn-primary' {...attrs}>
+    <button type={onClick ? 'button' : 'submit'} className={classNames({'btn': true, 'btn-primary': true, 'float-right': right})} {...attrs}>
       <i className={buttonIconClass}>{buttonIconSymbol}</i>
       <span>{children}</span>
     </button>

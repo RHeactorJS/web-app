@@ -4,15 +4,14 @@ import { H } from '../lib/headers'
 import { httpProblemfromFetchResponse, httpProblemfromException } from '../lib/http-problem'
 import { URIValueType, URIValue } from '@rheactorjs/value-objects'
 import { String as StringType, Function as FunctionType, irreducible, maybe, Object as ObjectType } from 'tcomb'
-import { ReanimationFailedError } from '@rheactorjs/errors'
 import { Index, Status, MaybeJsonWebTokenType, MaybeVersionNumberType } from '@rheactorjs/models'
 import Promise from 'bluebird'
 
 const MaybeObjectType = maybe(ObjectType)
 
-const modelFetch = (method, mimeType, model, uri, token, data, version) => {
+const modelFetch = (method, mimeType, fromJSON, uri, token, data, version) => {
   StringType(mimeType, ['modelFetch()', 'mimeType:String'])
-  FunctionType(model.fromJSON, ['modelFetch()', 'model:Model'])
+  FunctionType(fromJSON, ['modelFetch()', 'fromJSON:Function'])
   URIValueType(uri, ['modelFetch()', 'uri:URIValue'])
   MaybeJsonWebTokenType(token, ['modelFetch()', 'token:?JSONWebToken'])
   MaybeObjectType(data, ['modelFetch()', 'data:?Object'])
@@ -39,7 +38,7 @@ const modelFetch = (method, mimeType, model, uri, token, data, version) => {
         const clength = res.headers.get('Content-Length')
         if (+clength) {
           if (res.headers.get('Content-Type').indexOf(mimeType) === -1) return httpProblemfromFetchResponse(res, 'GET: response has wrong mimeType!').then(reject)
-          return res.json().then(data => resolve(model.fromJSON(data)))
+          return res.json().then(data => resolve(fromJSON(data)))
         }
         if (res.headers.get('Location')) return resolve(new URIValue(res.headers.get('Location')))
         return resolve()
@@ -62,22 +61,10 @@ export class API {
     this.modelPut = modelFetch.bind(this, 'PUT', mimeType)
   }
 
-  /**
-   * @param {Object} data
-   * @returns {Model}
-   * @throws {ReanimationFailedError}
-   */
-  createModelInstance (data) {
-    switch (data.$context.toString()) {
-      default:
-        throw new ReanimationFailedError(`Unknown context: "${data.$context}"!`, data)
-    }
-  }
-
   index () {
     if (!this.indexPromise) {
       this.indexPromise = new Promise((resolve, reject) => {
-        this.modelGet(Index, this.apiIndex, undefined, {t: Date.now()})
+        this.modelGet(Index.fromJSON, this.apiIndex, undefined, {t: Date.now()})
           .then(resolve)
           .catch(err => {
             this.indexPromise = false
@@ -96,7 +83,7 @@ export class API {
       .index()
       .then(({$links}) => $links)
       .filter(({rel}) => rel === 'status')
-      .spread(statusRelation => this.modelGet(Status, statusRelation.href))
+      .spread(statusRelation => this.modelGet(Status.fromJSON, statusRelation.href))
   }
 }
 

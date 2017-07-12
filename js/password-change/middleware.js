@@ -4,7 +4,7 @@ import { User } from '@rheactorjs/models'
 import { CHANGE_PASSWORD, newPasswordRequestSuccess, newPasswordRequestFailed, CONFIRM_CHANGE_PASSWORD, confirmNewPasswordRequestSuccess, confirmNewPasswordRequestFailed } from './actions'
 
 export default apiClient => {
-  const userClient = new GenericModelAPIClient(apiClient, User)
+  const userClient = new GenericModelAPIClient(apiClient, User.fromJSON)
   return ({dispatch}) => next => action => {
     switch (action.type) {
       case CHANGE_PASSWORD:

@@ -1,7 +1,7 @@
-import { USER_UPDATED } from '../profile/actions'
+import { ME_UPDATED } from '../profile/actions'
 export const AUTHENTICATE = 'AUTHENTICATE'
 export const TOKEN = 'TOKEN'
-export const USER = 'USER'
+export const ME = 'ME'
 export const LOGIN = 'LOGIN'
 export const LOGIN_FAILED = 'LOGIN_FAILED'
 export const LOGOUT = 'LOGOUT'
@@ -10,10 +10,10 @@ export const AUTOLOGIN_SUCCESS = 'AUTOLOGIN_SUCCESS'
 export const AUTOLOGIN_FAILED = 'AUTOLOGIN_FAILED'
 export const REFRESH_TOKEN = 'REFRESH_TOKEN'
 
-export const authenticate = (token, user) => ({
+export const authenticate = (token, me) => ({
   type: AUTHENTICATE,
   token,
-  user
+  me
 })
 
 export const logout = () => ({
@@ -25,19 +25,19 @@ export const token = token => ({
   token
 })
 
-export const user = user => ({
-  type: USER,
-  user
+export const me = me => ({
+  type: ME,
+  me
 })
 
 export const autologin = () => ({
   type: AUTOLOGIN
 })
 
-export const autologinSuccess = (token, user) => ({
+export const autologinSuccess = (token, me) => ({
   type: AUTOLOGIN_SUCCESS,
   token,
-  user
+  me
 })
 
 export const autologinFailed = (error) => ({
@@ -60,26 +60,26 @@ export const refreshToken = () => ({
   type: REFRESH_TOKEN
 })
 
-export default (state = {token: false, user: false, autologinComplete: false, autologinError: false, error: false, refreshingToken: false}, action) => {
+export default (state = {token: false, me: false, autologinComplete: false, autologinError: false, error: false, refreshingToken: false}, action) => {
   switch (action.type) {
     case LOGIN:
       return {...state, error: false}
     case LOGIN_FAILED:
       return {...state, error: action.error}
     case AUTHENTICATE:
-      return {...state, token: action.token, user: action.user}
+      return {...state, token: action.token, me: action.me}
     case LOGOUT:
-      return {...state, token: false, user: false}
+      return {...state, token: false, me: false}
     case TOKEN:
       return {...state, token: action.token, refreshingToken: false}
-    case USER:
-      return {...state, user: action.user}
+    case ME:
+      return {...state, me: action.me}
     case AUTOLOGIN_SUCCESS:
-      return {...state, autologinComplete: true, token: action.token, user: action.user}
+      return {...state, autologinComplete: true, token: action.token, me: action.me}
     case AUTOLOGIN_FAILED:
       return {...state, autologinComplete: true, autologinError: action.error}
-    case USER_UPDATED:
-      return {...state, user: state.user.updated({[action.property]: action.value})}
+    case ME_UPDATED:
+      return {...state, me: state.me.updated({[action.property]: action.value})}
     case REFRESH_TOKEN:
       return {...state, refreshingToken: true}
     default:

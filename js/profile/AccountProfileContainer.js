@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import AccountProfile from './AccountProfile'
 
-const mapStateToProps = ({auth: {autologinComplete, user}, profile: {success, error}}) => ({
+const mapStateToProps = ({auth: {autologinComplete, me}, profile: {success, error}}) => ({
   autologinComplete,
-  user,
+  me,
   success,
   error
 })

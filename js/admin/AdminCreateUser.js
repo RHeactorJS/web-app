@@ -54,7 +54,6 @@ const AdminCreateUserForm = reduxForm({
           name='email'
           id='email'
           label='email address'
-          autoFocus
         />
         <Field
           component={formInput}

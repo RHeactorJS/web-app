@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import AccountAvatar from './AccountAvatar'
 
-const mapStateToProps = ({fileUpload: {file, error: fileUploadError}, auth: {autologinComplete, user}, profile: {success, error}}) => ({
+const mapStateToProps = ({fileUpload: {file, error: fileUploadError}, auth: {autologinComplete, me}, profile: {success, error}}) => ({
   autologinComplete,
-  user,
+  me,
   success,
   error: error || fileUploadError,
   file

@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import moment from 'moment'
 import { refreshToken } from '../login/actions'
 
-export default ({user, token, appName, connected, refreshingToken, dispatch}) => {
+export default ({me, token, appName, connected, refreshingToken, dispatch}) => {
   const tokenLifetime = token ? Math.max(token.exp.getTime() - Date.now(), 0) : 0
   const tokenLifetimeHuman = token ? moment.duration(tokenLifetime).humanize() : 'Expired'
   return (
@@ -38,16 +38,16 @@ export default ({user, token, appName, connected, refreshingToken, dispatch}) =>
               }
             </abbr>
           </li>
-          {user.superUser && <AdminNavigation />}
-          { user && (
+          {me.superUser && <AdminNavigation />}
+          { me && (
             <li className='nav-item dropdown'>
               <a className='nav-link dropdown-toggle' id='accountDropdown' data-toggle='dropdown' aria-haspopup='true'
                 aria-expanded='false'>
-                { user.avatar
-                  ? <img src={user.avatar} className='avatar' alt={`${user.firstname} ${user.lastname}`} />
+                { me.avatar
+                  ? <img src={me.avatar} className='avatar' alt={`${me.firstname} ${me.lastname}`} />
                   : <i className='material-icons'>account_circle</i>
                 }
-                <span>{user.firstname || 'Anonymous'}</span>
+                <span>{me.firstname || 'Anonymous'}</span>
               </a>
               <div className='dropdown-menu' aria-labelledby='accountDropdown'>
                 <Link to='/account/profile' className='dropdown-item'>

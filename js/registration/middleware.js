@@ -4,7 +4,7 @@ import { User, JsonWebToken } from '@rheactorjs/models'
 import { REGISTER, registerSuccess, registerFailed, ACTIVATE, activationSuccess, activationError } from './actions'
 
 export default apiClient => {
-  const userClient = new GenericModelAPIClient(apiClient, User)
+  const userClient = new GenericModelAPIClient(apiClient, User.fromJSON)
   return ({dispatch}) => next => action => {
     switch (action.type) {
       case REGISTER:

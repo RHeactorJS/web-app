@@ -6,15 +6,15 @@ import { APIType } from './api'
 export class GenericModelAPIClient {
   /**
    * @param {API} api
-   * @param {Model} model
+   * @param {Function} fromJSON
    */
-  constructor (api, model) {
+  constructor (api, fromJSON) {
     this.api = APIType(api, ['GenericModelAPIClient()', 'api:api'])
-    FunctionType(model.fromJSON, ['GenericModelAPIClient()', 'model:Model'])
-    this.model = model
-    this.apiGet = this.api.modelGet.bind(this.api, model)
-    this.apiPost = this.api.modelPost.bind(this.api, model)
-    this.apiPut = this.api.modelPut.bind(this.api, model)
+    FunctionType(fromJSON, ['GenericModelAPIClient()', 'fromJSON:Function'])
+    this.fromJSON = fromJSON
+    this.apiGet = this.api.modelGet.bind(this.api, fromJSON)
+    this.apiPost = this.api.modelPost.bind(this.api, fromJSON)
+    this.apiPut = this.api.modelPut.bind(this.api, fromJSON)
   }
 
   /**
@@ -72,6 +72,6 @@ export class GenericModelAPIClient {
   list (endpoint, query, token) {
     URIValueType(endpoint, ['GenericModelAPIClient.list', 'endpoint:URIValue'])
     MaybeJsonWebTokenType(token, ['GenericModelAPIClient.get', 'token:?JsonWebToken'])
-    return this.api.modelPost({$context: List.$context, fromJSON: data => List.fromJSON(data, this.model.fromJSON)}, endpoint, token, query)
+    return this.api.modelPost(data => List.fromJSON(data, this.fromJSON), endpoint, token, query)
   }
 }

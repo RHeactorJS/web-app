@@ -17,6 +17,7 @@ import AccountEmailChangeConfirm from './profile/AccountEmailChangeConfirmContai
 import AccountProfile from './profile/AccountProfileContainer'
 import AccountAvatar from './profile/AccountAvatarContainer'
 import AdminUsers from './admin/AdminUsersContainer'
+import AdminEditUser from './admin/AdminEditUserContainer'
 import Home from './home/HomeContainer'
 import AppUpdate from './app-update/AppUpdateContainer'
 import React from 'react'
@@ -91,7 +92,8 @@ ReactDOM.render(
         <Route exact path='/account/profile' component={AccountProfile} />
         <Route exact path='/account/email-change' component={AccountEmailChangeConfirm} />
         <Route exact path='/account/avatar' component={AccountAvatar} />
-        <Route exact path='/admin/users' component={AdminUsers} />
+        <Route exact strict path='/admin/users' component={AdminUsers} />
+        <Route exact strict path='/admin/user' component={AdminEditUser} />
       </div>
     </Router>
   </Provider>,

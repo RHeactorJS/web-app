@@ -11,11 +11,11 @@ import Promise from 'bluebird'
 const uploadContent = new URIValue('https://github.com/RHeactorJS/image-service#Upload')
 
 export default (apiClient, imageServiceApiClient) => {
-  const tokenClient = new GenericModelAPIClient(apiClient, JsonWebToken)
+  const tokenClient = new GenericModelAPIClient(apiClient, JsonWebToken.fromJSON)
   return ({dispatch, getState}) => {
     const imageService = new GenericModelAPIClient(
       imageServiceApiClient,
-      {$context: uploadContent, fromJSON: ({url}) => new URIValue(url)}
+      ({url}) => new URIValue(url)
     )
     return next => action => {
       switch (action.type) {

@@ -4,22 +4,22 @@ import { Field, reduxForm, SubmissionError, initialize } from 'redux-form'
 import { isEmail } from '../lib/is-email'
 import { EmailValue } from '@rheactorjs/value-objects'
 import { formInput, AppButton, FormHeader, GenericError, FormCard, ContainerRow } from '../app/form-components'
-import { updateUser } from './actions'
+import { updateMe } from './actions'
 
 export default class AccountProfileScreen extends React.Component {
   constructor (props) {
     super(props)
     this.pathname = props.location.pathname
     this.autologinComplete = props.autologinComplete
-    this.user = props.user
-    if (this.user) this.props.dispatch(initialize('accountProfile', {firstname: this.user.firstname, lastname: this.user.lastname}))
+    this.me = props.me
+    if (this.me) this.props.dispatch(initialize('accountProfile', {firstname: this.me.firstname, lastname: this.me.lastname}))
   }
 
-  componentWillReceiveProps ({autologinComplete, user, success, error}) {
+  componentWillReceiveProps ({autologinComplete, me, success, error}) {
     if (autologinComplete) {
       this.autologinComplete = autologinComplete
-      this.user = user
-      this.props.dispatch(initialize('accountProfile', {firstname: user.firstname, lastname: user.lastname}))
+      this.me = me
+      this.props.dispatch(initialize('accountProfile', {firstname: me.firstname, lastname: me.lastname}))
     }
     this.success = success
     this.error = error
@@ -27,31 +27,31 @@ export default class AccountProfileScreen extends React.Component {
 
   changeProfile = ({firstname, lastname}) => {
     let prop, value
-    if (firstname !== this.user.firstname) {
+    if (firstname !== this.me.firstname) {
       prop = 'firstname'
       value = firstname
     }
-    if (lastname !== this.user.lastname) {
+    if (lastname !== this.me.lastname) {
       prop = 'lastname'
       value = lastname
     }
     if (!prop) return
-    this.props.dispatch(updateUser(prop, value))
+    this.props.dispatch(updateMe(prop, value))
     return true
   }
 
   changeEmail = ({email}) => {
-    if (new EmailValue(email).equals(this.user.email)) return
-    this.props.dispatch(updateUser('email', email))
+    if (new EmailValue(email).equals(this.me.email)) return
+    this.props.dispatch(updateMe('email', email))
     return true
   }
 
   render () {
     if (!this.autologinComplete) return null
-    return this.user
+    return this.me
       ? (<ContainerRow>
-        <AccountProfileForm updateUser={this.changeProfile} user={this.user} success={this.success} error={this.error} />
-        <AccountEmailForm updateUser={this.changeEmail} user={this.user} success={this.success} error={this.error} />
+        <AccountProfileForm updateMe={this.changeProfile} me={this.me} success={this.success} error={this.error} />
+        <AccountEmailForm updateMe={this.changeEmail} me={this.me} success={this.success} error={this.error} />
       </ContainerRow>)
       : <Redirect to={{pathname: '/login', returnTo: this.pathname}} />
   }
@@ -60,12 +60,12 @@ export default class AccountProfileScreen extends React.Component {
 class AccountForm extends React.Component {
   constructor (props) {
     super(props)
-    this.updateUser = props.updateUser
-    this.user = props.user
+    this.updateMe = props.updateMe
+    this.me = props.me
   }
 
   submitForm = (values) => {
-    if (!this.updateUser(values)) return
+    if (!this.updateMe(values)) return
     return new Promise((resolve, reject) => {
       this.submitPromise = {resolve, reject}
     })
@@ -83,7 +83,7 @@ class AccountForm extends React.Component {
 
 class AccountProfileForm extends AccountForm {
   render () {
-    return (<AccountProfileReduxForm user={this.user} onSubmit={this.submitForm} />)
+    return (<AccountProfileReduxForm me={this.me} onSubmit={this.submitForm} />)
   }
 }
 
@@ -95,15 +95,15 @@ const validateProfileForm = ({firstname, lastname}) => ({
 const AccountProfileReduxForm = reduxForm({
   form: 'accountProfile',
   validate: validateProfileForm
-})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, user}) => (<FormCard half>
+})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, me}) => (<FormCard half>
   <form name='form'>
     <div className='card-header'>
       <h1 className='card-title'>
-        { user.avatar
-          ? <img src={user.avatar} className='avatar' alt={`${user.firstname} ${user.lastname}`} />
+        { me.avatar
+          ? <img src={me.avatar} className='avatar' alt={`${me.firstname} ${me.lastname}`} />
           : <i className='material-icons'>person</i>
         }
-        {user.firstname} {user.lastname}
+        {me.firstname} {me.lastname}
       </h1>
     </div>
     <div className='card-block'>
@@ -147,18 +147,18 @@ const AccountProfileReduxForm = reduxForm({
 
 class AccountEmailForm extends AccountForm {
   render () {
-    return <AccountEmailReduxForm user={this.user} onSubmit={this.submitForm} />
+    return <AccountEmailReduxForm me={this.me} onSubmit={this.submitForm} />
   }
 }
 
-const validateEmailForm = ({email}, {user}) => ({
-  email: !email || !isEmail(email) || email === user.email.toString()
+const validateEmailForm = ({email}, {me}) => ({
+  email: !email || !isEmail(email) || email === me.email.toString()
 })
 
 const AccountEmailReduxForm = reduxForm({
   form: 'accountEmail',
   validate: validateEmailForm
-})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, user}) => (<FormCard half>
+})(({handleSubmit, submitting, valid, error, submitSucceeded, submitFailed, me}) => (<FormCard half>
   <form name='form' onSubmit={handleSubmit}>
     <FormHeader submitSucceeded={submitSucceeded} icon='person'>Change email address</FormHeader>
     <div className='card-block'>
@@ -169,7 +169,7 @@ const AccountEmailReduxForm = reduxForm({
       )}
       <p className='card-text'>
         Your current email address is:<br />
-        <code>{`${user.email}`}</code>.
+        <code>{`${me.email}`}</code>.
       </p>
       <p className='card-text'>
         In order to change your email, please enter a new email address below.<br />

@@ -5,8 +5,8 @@ import { URIValue } from '@rheactorjs/value-objects'
 import { LOGIN, authenticate, loginFailed, REFRESH_TOKEN, token } from './actions'
 
 export default apiClient => {
-  const tokenClient = new GenericModelAPIClient(apiClient, JsonWebToken)
-  const userClient = new GenericModelAPIClient(apiClient, User)
+  const tokenClient = new GenericModelAPIClient(apiClient, JsonWebToken.fromJSON)
+  const userClient = new GenericModelAPIClient(apiClient, User.fromJSON)
   return ({dispatch, getState}) => next => action => {
     switch (action.type) {
       case LOGIN:
@@ -16,7 +16,7 @@ export default apiClient => {
           .then(index => JSONLD.getRelLink('login', index))
           .then(uri => tokenClient.create(uri, {email, password}))
           .then(token => userClient.get(new URIValue(token.sub), token)
-            .then(user => dispatch(authenticate(token, user)))
+            .then(me => dispatch(authenticate(token, me)))
           )
           .catch(err => dispatch(loginFailed(err)))
       case REFRESH_TOKEN:

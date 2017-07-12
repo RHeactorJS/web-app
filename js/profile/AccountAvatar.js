@@ -9,13 +9,13 @@ export default class AccountAvatarScreen extends React.Component {
     super(props)
     this.pathname = props.location.pathname
     this.autologinComplete = props.autologinComplete
-    this.user = props.user
+    this.me = props.me
   }
 
-  componentWillReceiveProps ({autologinComplete, user, file, success, error}) {
+  componentWillReceiveProps ({autologinComplete, me, file, success, error}) {
     this.error = error
     this.autologinComplete = autologinComplete
-    this.user = user
+    this.me = me
     this.success = success
     this.file = file
   }
@@ -34,8 +34,8 @@ export default class AccountAvatarScreen extends React.Component {
 
   render () {
     if (!this.autologinComplete) return null
-    return this.user
-      ? <AccountAvatarForm onFileSelected={this.onFileSelected} error={this.error} progress={this.progress()} filename={this.filename()} avatar={this.user && this.user.avatar} label={this.user && this.user.name} />
+    return this.me
+      ? <AccountAvatarForm onFileSelected={this.onFileSelected} error={this.error} progress={this.progress()} filename={this.filename()} avatar={this.me && this.me.avatar} label={this.me && this.me.name} />
       : <Redirect to={{pathname: '/login', returnTo: this.pathname}} />
   }
 }
