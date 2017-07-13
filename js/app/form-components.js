@@ -1,6 +1,11 @@
 import React from 'react'
 import classNames from 'classnames'
+import { isEmail } from '../lib/is-email'
+import { Control } from 'react-redux-form'
 
+/**
+ * @deprecated Use {formInput2}
+ */
 export const formInput = ({input, id, label, hint, tabIndex, autoFocus, required, disabled, type, meta: {dirty, error}, children}) => (
   <fieldset className={classNames({'form-group': true, 'has-success': dirty && !error, 'has-danger': dirty && error})}>
     <label htmlFor={id}>
@@ -22,6 +27,39 @@ export const formInput = ({input, id, label, hint, tabIndex, autoFocus, required
     {children}
   </fieldset>
 )
+
+export const formInput2 = (props) => {
+  const {disabled, label, name, onBlur, onChange, onFocus, onKeyPress, required, type, value, hint, tabIndex, autoFocus, pristine, valid} = props
+  const dirty = !pristine
+  const error = !valid
+  const attrs = {
+    id: name,
+    name,
+    type,
+    value,
+    onBlur,
+    onChange,
+    onFocus,
+    onKeyPress
+  }
+  if (tabIndex) attrs.tabIndex = tabIndex
+  if (required) attrs.required = true
+  if (autoFocus) attrs.autoFocus = true
+  if (disabled) attrs.disabled = true
+  return (<fieldset className={classNames({'form-group': true, 'has-success': dirty && !error, 'has-danger': dirty && error})}>
+    <label htmlFor={name}>
+      {label}
+      { hint && (<small><br />{hint}</small>)}
+    </label>
+    <input {...attrs}
+      className={classNames({
+        'form-control': true,
+        'form-control-success': dirty && !error,
+        'form-control-danger': dirty && error
+      })}
+    />
+  </fieldset>)
+}
 
 export const FormHeader = ({submitSucceeded, icon, children, spin}) => (
   <div className='card-header'>
@@ -99,4 +137,31 @@ export const FormCard = ({children, half}) => {
       </div>
     </section>
   )
+}
+
+const stringNotEmpty = (val) => val && val.length > 1
+
+export const RRFField = ({name, label, tabIndex, required, disabled, onBlur, email}) => {
+  const attrs = {}
+  if (tabIndex) attrs.tabIndex = tabIndex
+  attrs.validators = {}
+  if (required) {
+    attrs.required = true
+    attrs.validators.stringNotEmpty = stringNotEmpty
+  }
+  if (email) {
+    attrs.validators.email = isEmail
+    attrs.type = 'email'
+  }
+  if (disabled) attrs.disabled = disabled
+  if (onBlur) attrs.onBlur = onBlur
+  return <Control.text
+    {...attrs}
+    model={`.${name}`}
+    component={formInput2}
+    mapProps={{
+      pristine: ({fieldValue}) => fieldValue.pristine,
+      valid: ({fieldValue}) => fieldValue.valid
+    }}
+    label={label} />
 }
