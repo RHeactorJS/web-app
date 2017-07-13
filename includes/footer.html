@@ -1,18 +1,7 @@
 <footer>
   <p>
-    <a href="http://resourceful-humans.com" target="_blank">
-      <img src="/img/rh-logo-white.svg" alt="Resourceful Humans GmbH" class="rhlogo">
-    </a>
+    <%= data.appName %><br>
+    Made with <a href="https://github.com/RHeactorJS/" target="_blank">RHeactorJS v<%= data.version %></a><br/>
   </p>
-  <p>
-    <%= data.appName %> v<%= data.version %>
-    <span class="ng-cloak">
-      <abbr class="environment environment-%%config.environment%%" title="Frontend environment">%%config.environment%%</abbr>
-      <abbr class="environment environment-%%status.environment%%" title="Backend environment">%%status.environment%%</abbr>
-    </span>
-    <br>
-    Made with 100% Entrepreneurship | 0% Bureaucracy in many places worldwide by <a href="http://resourceful-humans.com/" rel="me" target="_blank">Resourceful Humans GmbH</a>. © 2016—2017 All rights reserved.<br/>
-    <a href="https://resourceful-humans.com/imprint.html" target="_blank">Imprint</a> |
-    <a href="https://github.com/ResourcefulHumans/" target="_blank">GitHub</a><br/>
-  </p>
+  <div id="react-status"></div>
 </footer>

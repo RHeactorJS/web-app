@@ -3,6 +3,7 @@
   "description": "Contains the building blocks for a web application",
   "version": "0.0.0-development",
   "scripts": {
+    "dev-server": "environment=development nodemon -e js,html,scss -w ./js -w ./test -w ./assets -w ./includes -w ./scss -d 1 -x 'make development && babel-node scripts/server.js'",
     "test": "NODE_ENV=testing mocha --compilers js:babel-register --reporter=dot --timeout=1350 test/\\*\\*/\\*.js",
     "test:coverage": "NODE_ENV=nyc babel js --out-dir instrumented-js > /dev/null && nyc --reporter=text-summary --reporter=lcov npm run test",
     "test:coverage-travis": "npm run test:coverage && codeclimate-test-reporter < ./coverage/lcov.info && rm -rf ./coverage",
@@ -24,37 +25,59 @@
     "url": "https://github.com/RHeactorJS/web-app/issues"
   },
   "homepage": "https://github.com/RHeactorJS/web-app#readme",
-  "peerDependencies": {
+  "dependencies": {
     "@rheactorjs/errors": "1.x",
-    "@rheactorjs/models": "1.x",
-    "@rheactorjs/value-objects": "1.x",
-    "angular": "^1.6.1",
+    "@rheactorjs/models": "^2.0.1",
+    "@rheactorjs/value-objects": "^1.0.2",
+    "bluebird": "^3.4.7",
+    "bootstrap": "4.0.0-alpha.6",
+    "classnames": "^2.2.5",
     "compare-versions": "^3.0.0",
     "event-source-polyfill": "^0.0.9",
-    "jquery": "^3.1.1",
-    "bluebird": "^3.4.7",
-    "bootstrap": "4.0.0-alpha.5",
+    "jquery": "^3.2.1",
     "lodash": "^4.17.4",
+    "material-design-icons": "^3.0.1",
+    "meownica-web-fonts-loader": "^1.2.1",
     "moment": "^2.17.1",
-    "ng-file-upload": "^12.2.13",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.5",
+    "react-redux-form": "^1.13.0",
+    "react-router-dom": "^4.1.1",
+    "redux": "^3.7.1",
+    "redux-form": "^6.8.0",
     "showdown": "^1.6.0",
-    "tcomb": "^3.2.16"
+    "tcomb": "^3.2.21",
+    "tether": "^1.4.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
+    "@rheactorjs/build-views": "^1.0.1",
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-preset-env": "^1.3.2",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-register": "^6.23.0",
-    "chai": "^3.5.0",
-    "codeclimate-test-reporter": "^0.4.1",
-    "husky": "^0.13.3-0",
-    "mocha": "^3.2.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0",
+    "chai": "^4.0.2",
+    "codeclimate-test-reporter": "^0.5.0",
+    "colors": "^1.1.2",
+    "husky": "^0.14.3",
+    "mocha": "^3.4.2",
     "mocha-lcov-reporter": "^1.3.0",
-    "nyc": "^10.0.0",
-    "semantic-release": "^6.3.2",
-    "standard": "^10.0.1",
-    "validate-commit-msg": "^2.8.2"
+    "node-sass": "^4.5.3",
+    "node-static": "^0.7.9",
+    "nodemon": "^1.11.0",
+    "nyc": "^11.0.3",
+    "react-test-renderer": "^15.6.1",
+    "semantic-release": "^6.3.6",
+    "standard": "^10.0.2",
+    "validate-commit-msg": "^2.12.2"
   },
   "files": [
     "dist",
@@ -66,5 +89,8 @@
   "main": "dist/index.js",
   "engines": {
     "node": ">=6.10.2"
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }
