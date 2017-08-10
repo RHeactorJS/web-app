@@ -1,5 +1,7 @@
 # web-app
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/RHeactorJS/web-app.svg)](https://greenkeeper.io/)
+
 [![npm version](https://img.shields.io/npm/v/@rheactorjs/web-app.svg)](https://www.npmjs.com/package/@rheactorjs/web-app)
 [![Build Status](https://travis-ci.org/RHeactorJS/web-app.svg?branch=master)](https://travis-ci.org/RHeactorJS/web-app)
 [![monitored by greenkeeper.io](https://img.shields.io/badge/greenkeeper.io-monitored-brightgreen.svg)](http://greenkeeper.io/) 
