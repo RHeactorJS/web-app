@@ -1,0 +1,1 @@
+- Replace redux-form with react-redux-form

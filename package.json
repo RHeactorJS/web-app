@@ -10,7 +10,7 @@
     "lint": "standard",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "precommit": "npm run lint && npm test",
-    "commitmsg": "validate-commit-msg"
+    "commitmsg": "commitlint -e"
   },
   "publishConfig": {
     "access": "public"
@@ -51,6 +51,8 @@
     "tether": "^1.4.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^4.2.0",
+    "@commitlint/config-angular": "^4.2.0",
     "@rheactorjs/build-views": "^1.0.1",
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
@@ -76,8 +78,7 @@
     "nyc": "^11.0.3",
     "react-test-renderer": "^15.6.1",
     "semantic-release": "^6.3.6",
-    "standard": "^10.0.2",
-    "validate-commit-msg": "^2.12.2"
+    "standard": "^10.0.2"
   },
   "files": [
     "dist",
